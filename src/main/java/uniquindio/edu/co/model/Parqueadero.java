@@ -33,7 +33,7 @@ public class Parqueadero {
         }
     }
 
-    // ====================== REGISTRAR INGRESO ======================
+
     public void registrarIngreso(Vehiculo vehiculo)
             throws EspacioNoDisponibleException, PlacaDuplicadaException, SinEspaciosException {
 
@@ -41,10 +41,8 @@ public class Parqueadero {
             throw new IllegalArgumentException("El vehículo no puede ser null");
         }
 
-        // Validar placa duplicada
         validarPlacaDuplicada(vehiculo.getPlaca());
 
-        // Buscar espacio disponible del mismo tipo
         Espacio espacioDisponible = null;
         for (Espacio e : espacios) {
             if (e.disponible() && e.getTipo() == vehiculo.getTipo()) {
@@ -57,7 +55,6 @@ public class Parqueadero {
             throw new SinEspaciosException("No hay espacios disponibles para vehículos tipo " + vehiculo.getTipo());
         }
 
-        // Ocupar el espacio
         espacioDisponible.ocupar(vehiculo);
         vehiculo.setEspacioAsignado(espacioDisponible.getCodigo());
         vehiculosDentro.add(vehiculo);
@@ -66,7 +63,7 @@ public class Parqueadero {
                 + " | Espacio: " + espacioDisponible.getCodigo());
     }
 
-    // ====================== REGISTRAR SALIDA ======================
+
     public double registrarSalida(String placa)
             throws VehiculoNoEncontradoException, EspacioNoDisponibleException {
 
@@ -84,10 +81,8 @@ public class Parqueadero {
             throw new VehiculoNoEncontradoException(placaBuscada);
         }
 
-        //  1. CALCULAR PRIMERO (ANTES DE CAMBIAR ESTADO)
         double valorAPagar = gestorTarifas.calcularValorAPagar(vehiculoSalida);
 
-        //  2. LIBERAR ESPACIO
         for (Espacio e : espacios) {
             if (e.getCodigo().equals(vehiculoSalida.getEspacioAsignado())) {
                 e.liberar();
@@ -95,10 +90,8 @@ public class Parqueadero {
             }
         }
 
-        //  3. MARCAR SALIDA
         vehiculoSalida.setEstaDentro(false);
 
-        //  4. ELIMINAR
         vehiculosDentro.remove(vehiculoSalida);
 
         System.out.println("✓ Salida registrada");
@@ -109,7 +102,6 @@ public class Parqueadero {
         return valorAPagar;
     }
 
-    // ====================== MÉTODOS AUXILIARES ======================
     private void validarPlacaDuplicada(String placa) throws PlacaDuplicadaException {
         String placaBuscada = placa.trim().toUpperCase();
         for (Vehiculo v : vehiculosDentro) {
@@ -122,7 +114,7 @@ public class Parqueadero {
     public void deshabilitarEspacio(String codigo) {
         for (Espacio e : espacios) {
             if (e.getCodigo().equalsIgnoreCase(codigo)) {
-                boolean exito = e.deshabilitar();   // ahora devuelve boolean
+                boolean exito = e.deshabilitar();
                 if (!exito) {
                     System.out.println("   No se realizó ninguna acción.");
                 }
@@ -143,7 +135,7 @@ public class Parqueadero {
         System.out.println("✗ Espacio " + codigo + " no encontrado");
     }
 
-    // ====================== GETTERS ======================
+
     public List<Espacio> getEspacios() {
         return new ArrayList<>(espacios);
     }

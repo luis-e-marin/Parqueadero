@@ -33,7 +33,6 @@ public class GestorTarifas {
         return tarifa.calcularValor(minutos);
     }
 
-    // Sobrecarga con descuento de usuario
     public double calcularValorAPagar(Vehiculo vehiculo, Usuario usuario) {
         double valor = calcularValorAPagar(vehiculo);
         if (usuario != null && usuario.getDescuento() > 0) {

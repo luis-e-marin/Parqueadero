@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import java.time.Duration;
 
 public class Vehiculo {
-    private final String placa;                    // final: la placa no cambia
-    private final TipoVehiculo tipo;               // final: el tipo no cambia
+    private final String placa;
+    private final TipoVehiculo tipo;
     private String nombreConductor;
     private String identificacionConductor;
-    private final LocalDateTime horaIngreso;       // final: la hora de ingreso no debe cambiar
+    private final LocalDateTime horaIngreso;
     private String espacioAsignado;
     private boolean estaDentro;
 
@@ -35,7 +35,7 @@ public class Vehiculo {
         this.estaDentro = true;
     }
 
-    // ====================== GETTERS ======================
+    // GETTERS
     public String getPlaca() {
         return placa;
     }
@@ -63,8 +63,7 @@ public class Vehiculo {
     public boolean isEstaDentro() {
         return estaDentro;
     }
-
-    // ====================== SETTERS CONTROLADOS ======================
+    //SETTERS
     public void setNombreConductor(String nombreConductor) {
         if (nombreConductor == null || nombreConductor.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del conductor no puede estar vacío");

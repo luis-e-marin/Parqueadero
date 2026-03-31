@@ -27,10 +27,10 @@ public class Usuario {
 
     private double calcularDescuentoPorDefecto(TipoUsuario tipo) {
         return switch (tipo) {
-            case ESTUDIANTE -> 20.0;      // 20% descuento
-            case DOCENTE -> 15.0;         // 15% descuento
-            case ADMINISTRATIVO -> 10.0;  // 10% descuento
-            case VISITANTE -> 0.0;        // sin descuento
+            case ESTUDIANTE -> 20.0;
+            case DOCENTE -> 15.0;
+            case ADMINISTRATIVO -> 10.0;
+            case VISITANTE -> 0.0;
         };
     }
 

@@ -27,7 +27,7 @@ public class Cuenta {
         this.usuarioAsociado = usuarioAsociado;
     }
 
-    // ================= LOGIN =================
+
     public boolean login(String usuarioIngresado, String claveIngresada) {
         if (usuarioIngresado == null || claveIngresada == null) return false;
 
@@ -35,7 +35,6 @@ public class Cuenta {
                 this.clave.equals(claveIngresada.trim());
     }
 
-    // ================= ROLES =================
     public boolean esAdministrador() {
         return rol == Rol.ADMIN;
     }

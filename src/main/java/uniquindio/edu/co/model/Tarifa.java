@@ -5,7 +5,7 @@ import uniquindio.edu.co.enums.TipoVehiculo;
 public class Tarifa {
     private final TipoVehiculo tipo;
     private double valorPorHora;
-    private double descuentoPorcentaje;   // 0 = sin descuento
+    private double descuentoPorcentaje;
 
     public Tarifa(TipoVehiculo tipo, double valorPorHora) {
         this(tipo, valorPorHora, 0.0);
