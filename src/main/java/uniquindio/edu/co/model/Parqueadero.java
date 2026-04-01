@@ -41,8 +41,10 @@ public class Parqueadero {
 
     private void inicializarEspacios() {
         for (int i = 1; i <= 10; i++) espacios.add(new Espacio("C" + i, TipoVehiculo.CARRO));
-        for (int i = 1; i <= 8; i++)  espacios.add(new Espacio("M" + i, TipoVehiculo.MOTO));
-        for (int i = 1; i <= 5; i++)  espacios.add(new Espacio("B" + i, TipoVehiculo.BICICLETA));
+
+        for (int j = 1; j <= 8; j++)  espacios.add(new Espacio("M" + j, TipoVehiculo.MOTO));
+
+        for (int k = 1; k <= 5; k++)  espacios.add(new Espacio("B" + k, TipoVehiculo.BICICLETA));
     }
 
     private void inicializarTarifas() {
@@ -58,9 +60,9 @@ public class Parqueadero {
 
 
     public Cuenta login(String username, String password) throws UsuarioNoAutorizadoException {
-        for (Cuenta c : cuentas) {
-            if (c.intentarLogin(username, password)) {
-                return c;
+        for (Cuenta cuenta : cuentas) {
+            if (cuenta.intentarLogin(username, password)) {
+                return cuenta;
             }
         }
         throw new UsuarioNoAutorizadoException("Credenciales incorrectas");
@@ -76,15 +78,15 @@ public class Parqueadero {
 
     public Usuario buscarUsuarioPorIdentificacion(String identificacion) {
         return usuariosRegistrados.stream()
-                .filter(u -> u.getIdentificacion().equalsIgnoreCase(identificacion))
+                .filter(usuario -> usuario.getIdentificacion().equalsIgnoreCase(identificacion))
                 .findFirst()
                 .orElse(null);
     }
 
     public Usuario buscarUsuarioPorPlaca(String placa) {
-        for (Usuario u : usuariosRegistrados) {
-            if (u.tieneVehiculoConPlaca(placa)) {
-                return u;
+        for (Usuario usuario : usuariosRegistrados) {
+            if (usuario.tieneVehiculoConPlaca(placa)) {
+                return usuario;
             }
         }
         return null;
@@ -92,18 +94,18 @@ public class Parqueadero {
 
 
     public boolean deshabilitarEspacio(String codigo) {
-        for (Espacio e : espacios) {
-            if (e.getCodigo().equalsIgnoreCase(codigo)) {
-                return e.deshabilitar();
+        for (Espacio espacio : espacios) {
+            if (espacio.getCodigo().equalsIgnoreCase(codigo)) {
+                return espacio.deshabilitar();
             }
         }
         return false;
     }
 
     public void habilitarEspacio(String codigo) {
-        for (Espacio e : espacios) {
-            if (e.getCodigo().equalsIgnoreCase(codigo)) {
-                e.habilitar();
+        for (Espacio espacio : espacios) {
+            if (espacio.getCodigo().equalsIgnoreCase(codigo)) {
+                espacio.habilitar();
                 return;
             }
         }
@@ -117,13 +119,13 @@ public class Parqueadero {
         }
 
         // Validar placa duplicada
-        if (vehiculosDentro.stream().anyMatch(v -> v.getPlaca().equalsIgnoreCase(vehiculo.getPlaca()))) {
+        if (vehiculosDentro.stream().anyMatch(vehiculos -> vehiculos.getPlaca().equalsIgnoreCase(vehiculo.getPlaca()))) {
             throw new PlacaDuplicadaException(vehiculo.getPlaca());
         }
 
         // Buscar espacio disponible del mismo tipo
         Espacio espacio = espacios.stream()
-                .filter(e -> e.estaDisponible() && e.getTipo() == vehiculo.getTipo())
+                .filter(espacios -> espacios.estaDisponible() && espacios.getTipo() == vehiculo.getTipo())
                 .findFirst()
                 .orElseThrow(() -> new SinEspaciosException(vehiculo.getTipo()));
 
@@ -133,9 +135,9 @@ public class Parqueadero {
         vehiculosDentro.add(vehiculo);
 
         // Agregar vehículo al usuario si existe
-        Usuario dueno = buscarUsuarioPorIdentificacion(vehiculo.getIdUsuarioDueno());
-        if (dueno != null) {
-            dueno.agregarVehiculo(vehiculo);
+        Usuario propietario = buscarUsuarioPorIdentificacion(vehiculo.getIdUsuarioPropietario());
+        if (propietario != null) {
+            propietario.agregarVehiculo(vehiculo);
         }
     }
 
@@ -145,7 +147,7 @@ public class Parqueadero {
         }
 
         Vehiculo vehiculo = vehiculosDentro.stream()
-                .filter(v -> v.getPlaca().equalsIgnoreCase(placa))
+                .filter(vehiculos -> vehiculos.getPlaca().equalsIgnoreCase(placa))
                 .findFirst()
                 .orElseThrow(() -> new VehiculoNoEncontradoException(placa));
 
@@ -156,17 +158,17 @@ public class Parqueadero {
         };
 
         long minutos = vehiculo.getMinutosPermanencia();
-        Usuario dueno = buscarUsuarioPorPlaca(placa);
-        double valor = (dueno != null)
-                ? tarifa.calcularValorConDescuentoUsuario(minutos, dueno.getDescuento())
+        Usuario proietario = buscarUsuarioPorPlaca(placa);
+        double valor = (proietario != null)
+                ? tarifa.calcularValorConDescuentoUsuario(minutos, proietario.getDescuento())
                 : tarifa.calcularValor(minutos);
 
         // Liberar espacio
         espacios.stream()
-                .filter(e -> e.getCodigo().equals(vehiculo.getEspacioAsignado()))
+                .filter(espacio -> espacio.getCodigo().equals(vehiculo.getEspacioAsignado()))
                 .findFirst()
-                .ifPresent(e -> {
-                    try { e.liberar(); } catch (Exception ignored) {}
+                .ifPresent(espacio -> {
+                    try { espacio.liberar(); } catch (Exception ignored) {}
                 });
 
         vehiculosDentro.remove(vehiculo);

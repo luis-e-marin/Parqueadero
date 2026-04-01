@@ -27,7 +27,9 @@ public class Navegador {
         }
     }
 
-    // Método cómodo para volver al Admin
+    /*
+    metodo volver
+     */
     public static void volverAlAdmin(Stage stageActual) {
         irA("/view/AdminView.fxml", stageActual);
     }

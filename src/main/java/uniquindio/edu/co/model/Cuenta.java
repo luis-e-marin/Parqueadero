@@ -4,32 +4,32 @@ import uniquindio.edu.co.enums.Rol;
 
 public class Cuenta {
 
-    private final String username;
-    private String password;
+    private final String user;
+    private String clave;
     private final Rol rol;
     private final Usuario usuarioAsociado;
 
-    public Cuenta(String username, String password, Rol rol, Usuario usuarioAsociado) {
-        if (username == null || username.trim().isEmpty()) {
+    public Cuenta(String user, String clave, Rol rol, Usuario usuarioAsociado) {
+        if (user == null || user.trim().isEmpty()) {
             throw new IllegalArgumentException("Username no puede estar vacío");
         }
-        if (password == null || password.trim().isEmpty()) {
+        if (clave == null || clave.trim().isEmpty()) {
             throw new IllegalArgumentException("La contraseña no puede estar vacía");
         }
         if (rol == null) {
             throw new IllegalArgumentException("El rol es obligatorio");
         }
 
-        this.username = username.trim().toLowerCase();
-        this.password = password.trim();
+        this.user = user.trim().toLowerCase();
+        this.clave = clave.trim();
         this.rol = rol;
         this.usuarioAsociado = usuarioAsociado;
     }
 
 
-    public boolean intentarLogin(String username, String password) {
-        if (username == null || password == null) return false;
-        return this.username.equals(username.trim().toLowerCase()) && this.password.equals(password);
+    public boolean intentarLogin(String user, String clave) {
+        if (user == null || clave == null) return false;
+        return this.user.equals(user.trim().toLowerCase()) && this.clave.equals(clave);
     }
 
     public boolean esAdministrador() {
@@ -43,26 +43,26 @@ public class Cuenta {
 
     public boolean cambiarClave(String claveActual, String nuevaClave) {
         if (nuevaClave == null || nuevaClave.trim().isEmpty()) return false;
-        if (!this.password.equals(claveActual)) return false;
+        if (!this.clave.equals(claveActual)) return false;
 
-        this.password = nuevaClave.trim();
+        this.clave = nuevaClave.trim();
         return true;
     }
 
-    public void setPassword(String nuevaPassword) {
-        if (nuevaPassword == null || nuevaPassword.trim().isEmpty()) {
+    public void setClave(String nuevaClave) {
+        if (nuevaClave == null || nuevaClave.trim().isEmpty()) {
             throw new IllegalArgumentException("La nueva contraseña no puede estar vacía");
         }
-        this.password = nuevaPassword.trim();
+        this.clave = nuevaClave.trim();
     }
 
     // Getters
-    public String getUsername() { return username; }
+    public String getUser() { return user; }
     public Rol getRol() { return rol; }
     public Usuario getUsuarioAsociado() { return usuarioAsociado; }
 
     @Override
     public String toString() {
-        return username + " (" + rol + ")";
+        return user + " (" + rol + ")";
     }
 }

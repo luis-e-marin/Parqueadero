@@ -59,7 +59,7 @@ public class Usuario {
             throw new IllegalArgumentException("El vehículo no puede ser null");
         }
         // Verificar que el vehículo pertenezca a este usuario
-        if (!vehiculo.getIdUsuarioDueno().equals(this.identificacion)) {
+        if (!vehiculo.getIdUsuarioPropietario().equals(this.identificacion)) {
             throw new IllegalArgumentException("Este vehículo no pertenece a este usuario");
         }
         // Evitar duplicados de placa
@@ -71,12 +71,12 @@ public class Usuario {
     }
 
     public void eliminarVehiculo(String placa) {
-        vehiculos.removeIf(v -> v.getPlaca().equalsIgnoreCase(placa));
+        vehiculos.removeIf(vehiculo -> vehiculo.getPlaca().equalsIgnoreCase(placa));
     }
 
     public Vehiculo buscarVehiculo(String placa) {
         return vehiculos.stream()
-                .filter(v -> v.getPlaca().equalsIgnoreCase(placa))
+                .filter(vehiculo -> vehiculo.getPlaca().equalsIgnoreCase(placa))
                 .findFirst()
                 .orElse(null);
     }

@@ -29,7 +29,7 @@ public class LoginController {
         try {
             Cuenta cuenta = parqueadero.login(user, pass);
 
-            System.out.println("Login exitoso: " + cuenta.getUsername() + " (" + cuenta.getRol() + ")");
+            System.out.println("Login exitoso: " + cuenta.getUser() + " (" + cuenta.getRol() + ")");
 
             Stage stage = (Stage) txtUsuario.getScene().getWindow();
 

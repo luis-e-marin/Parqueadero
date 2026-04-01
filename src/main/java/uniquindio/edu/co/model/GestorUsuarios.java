@@ -11,21 +11,21 @@ public class GestorUsuarios {
         usuarios = new ArrayList<>();
     }
 
-    public void agregarUsuario(Usuario u) {
-        usuarios.add(u);
+    public void agregarUsuario(Usuario usuario) {
+        usuarios.add(usuario);
     }
 
     public Usuario buscarPorId(String id) {
         return usuarios.stream()
-                .filter(u -> u.getIdentificacion().equalsIgnoreCase(id))
+                .filter(usuario -> usuario.getIdentificacion().equalsIgnoreCase(id))
                 .findFirst()
                 .orElse(null);
     }
 
     public Usuario buscarPorPlaca(String placa) {
-        for (Usuario u : usuarios) {
-            if (u.buscarVehiculo(placa) != null) {
-                return u;
+        for (Usuario usuario : usuarios) {
+            if (usuario.buscarVehiculo(placa) != null) {
+                return usuario;
             }
         }
         return null;

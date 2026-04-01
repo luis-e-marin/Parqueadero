@@ -10,7 +10,7 @@ public class Vehiculo {
     private final TipoVehiculo tipo;
     private String nombreConductor;
     private String identificacionConductor;
-    private String idUsuarioDueno;
+    private String idUsuarioPropietario;
 
     private LocalDateTime horaIngreso;
     private LocalDateTime horaSalida;
@@ -18,17 +18,17 @@ public class Vehiculo {
     private boolean estaDentro;
 
     public Vehiculo(String placa, TipoVehiculo tipo, String nombreConductor,
-                    String identificacionConductor, String idUsuarioDueno) {
+                    String identificacionConductor, String idUsuarioPropietario) {
 
         if (placa == null || placa.trim().isEmpty()) throw new IllegalArgumentException("Placa obligatoria");
         if (tipo == null) throw new IllegalArgumentException("Tipo de vehículo obligatorio");
-        if (idUsuarioDueno == null || idUsuarioDueno.trim().isEmpty()) throw new IllegalArgumentException("Debe tener un dueño");
+        if (idUsuarioPropietario == null || idUsuarioPropietario.trim().isEmpty()) throw new IllegalArgumentException("Debe tener un dueño");
 
         this.placa = placa.toUpperCase().trim();
         this.tipo = tipo;
         this.nombreConductor = nombreConductor != null ? nombreConductor.trim() : "";
         this.identificacionConductor = identificacionConductor != null ? identificacionConductor.trim() : "";
-        this.idUsuarioDueno = idUsuarioDueno.trim();
+        this.idUsuarioPropietario = idUsuarioPropietario.trim();
         this.estaDentro = false;
     }
 
@@ -52,10 +52,10 @@ public class Vehiculo {
 
     public String getTiempoPermanenciaFormateado() {
         if (!estaDentro) return "Fuera del parqueadero";
-        long min = getMinutosPermanencia();
-        long h = min / 60;
-        long m = min % 60;
-        return (h > 0 ? h + "h " : "") + m + "m";
+        long minutos = getMinutosPermanencia();
+        long hora = minutos / 60;
+        long minuto = minutos % 60;
+        return (hora > 0 ? hora + "hora " : "") + minuto + "m";
     }
 
     // Getters
@@ -63,12 +63,12 @@ public class Vehiculo {
     public TipoVehiculo getTipo() { return tipo; }
     public String getNombreConductor() { return nombreConductor; }
     public String getIdentificacionConductor() { return identificacionConductor; }
-    public String getIdUsuarioDueno() { return idUsuarioDueno; }
+    public String getIdUsuarioPropietario() { return idUsuarioPropietario; }
     public String getEspacioAsignado() { return espacioAsignado; }
     public boolean isEstaDentro() { return estaDentro; }
 
     @Override
     public String toString() {
-        return placa + " (" + tipo + ") - Dueño: " + idUsuarioDueno;
+        return placa + " (" + tipo + ") - Dueño: " + idUsuarioPropietario;
     }
 }
