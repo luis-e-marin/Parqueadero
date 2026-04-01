@@ -1,15 +1,12 @@
 package uniquindio.edu.co.exceptions;
 
-import uniquindio.edu.co.enums.EstadoEspacio;
 
 public class EspacioNoDisponibleException extends RuntimeException {
-    public EspacioNoDisponibleException(String message) {
-        super(message);
+    public EspacioNoDisponibleException(String mensaje) {
+        super(mensaje);
     }
 
-    // Constructor específico para ocupar
-    public EspacioNoDisponibleException(String codigoEspacio, EstadoEspacio estadoActual, String operacion) {
-        super("No se puede " + operacion + " el espacio " + codigoEspacio
-                + ". Estado actual: " + estadoActual);
+    public EspacioNoDisponibleException(String codigoEspacio, String operacion) {
+        super("No se puede " + operacion + " el espacio " + codigoEspacio + ". Está ocupado o fuera de servicio.");
     }
 }

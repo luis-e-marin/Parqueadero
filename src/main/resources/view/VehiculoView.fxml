@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Button?>
+<VBox spacing="12" alignment="CENTER" prefWidth="550" prefHeight="550"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="uniquindio.edu.co.controller.VehiculoController">
+
+    <Label text="GESTIÓN DE VEHÍCULOS" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER">
+        <TextField fx:id="txtIdUsuario" promptText="ID del Usuario" prefWidth="180"/>
+        <TextField fx:id="txtPlaca" promptText="Placa del Vehículo" prefWidth="150"/>
+    </HBox>
+
+    <ComboBox fx:id="comboTipo" promptText="Tipo de Vehículo" prefWidth="250"/>
+
+    <HBox spacing="10">
+        <Button text="Agregar Vehículo" onAction="#agregarVehiculo" prefWidth="160"/>
+        <Button text="Buscar por Placa" onAction="#buscarPorPlaca" prefWidth="160"/>
+        <Button text="Eliminar Vehículo" onAction="#eliminarVehiculo" prefWidth="160"/>
+    </HBox>
+
+    <Button text="← Volver al Menú Admin"
+            onAction="#volverAlAdmin"
+            style="-fx-background-color: #d32f2f; -fx-text-fill: white;"/>
+    <TextArea fx:id="areaResultado" prefHeight="220" editable="false"/>
+
+</VBox>

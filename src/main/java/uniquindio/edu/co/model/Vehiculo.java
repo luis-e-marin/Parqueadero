@@ -5,114 +5,70 @@ import java.time.LocalDateTime;
 import java.time.Duration;
 
 public class Vehiculo {
+
     private final String placa;
     private final TipoVehiculo tipo;
     private String nombreConductor;
     private String identificacionConductor;
-    private final LocalDateTime horaIngreso;
+    private String idUsuarioDueno;
+
+    private LocalDateTime horaIngreso;
+    private LocalDateTime horaSalida;
     private String espacioAsignado;
     private boolean estaDentro;
 
     public Vehiculo(String placa, TipoVehiculo tipo, String nombreConductor,
-                    String identificacionConductor, String espacioAsignado) {
+                    String identificacionConductor, String idUsuarioDueno) {
 
-        if (placa == null || placa.trim().isEmpty()) {
-            throw new IllegalArgumentException("La placa no puede estar vacía");
-        }
-        if (tipo == null) {
-            throw new IllegalArgumentException("El tipo de vehículo es obligatorio");
-        }
-        if (nombreConductor == null || nombreConductor.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del conductor es obligatorio");
-        }
+        if (placa == null || placa.trim().isEmpty()) throw new IllegalArgumentException("Placa obligatoria");
+        if (tipo == null) throw new IllegalArgumentException("Tipo de vehículo obligatorio");
+        if (idUsuarioDueno == null || idUsuarioDueno.trim().isEmpty()) throw new IllegalArgumentException("Debe tener un dueño");
 
         this.placa = placa.toUpperCase().trim();
         this.tipo = tipo;
-        this.nombreConductor = nombreConductor.trim();
+        this.nombreConductor = nombreConductor != null ? nombreConductor.trim() : "";
         this.identificacionConductor = identificacionConductor != null ? identificacionConductor.trim() : "";
-        this.espacioAsignado = espacioAsignado != null ? espacioAsignado.trim() : "";
+        this.idUsuarioDueno = idUsuarioDueno.trim();
+        this.estaDentro = false;
+    }
+
+    public void registrarIngreso(String espacio) {
         this.horaIngreso = LocalDateTime.now();
+        this.horaSalida = null;
+        this.espacioAsignado = espacio;
         this.estaDentro = true;
     }
 
-    // GETTERS
-    public String getPlaca() {
-        return placa;
+    public void registrarSalida() {
+        this.horaSalida = LocalDateTime.now();
+        this.estaDentro = false;
     }
 
-    public TipoVehiculo getTipo() {
-        return tipo;
-    }
-
-    public String getNombreConductor() {
-        return nombreConductor;
-    }
-
-    public String getIdentificacionConductor() {
-        return identificacionConductor;
-    }
-
-    public LocalDateTime getHoraIngreso() {
-        return horaIngreso;
-    }
-
-    public String getEspacioAsignado() {
-        return espacioAsignado;
-    }
-
-    public boolean isEstaDentro() {
-        return estaDentro;
-    }
-    //SETTERS
-    public void setNombreConductor(String nombreConductor) {
-        if (nombreConductor == null || nombreConductor.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del conductor no puede estar vacío");
-        }
-        this.nombreConductor = nombreConductor.trim();
-    }
-
-    public void setIdentificacionConductor(String identificacionConductor) {
-        this.identificacionConductor = identificacionConductor != null ? identificacionConductor.trim() : "";
-    }
-
-    public void setEspacioAsignado(String espacioAsignado) {
-        this.espacioAsignado = espacioAsignado != null ? espacioAsignado.trim() : "";
-    }
-
-    public void setEstaDentro(boolean estaDentro) {
-        this.estaDentro = estaDentro;
-    }
-
-    // ====================== MÉTODOS DE NEGOCIO ======================
     public long getMinutosPermanencia() {
-        if (!estaDentro) {
-            return 0;
-        }
-        return Duration.between(horaIngreso, LocalDateTime.now()).toMinutes();
+        if (horaIngreso == null) return 0;
+        LocalDateTime fin = horaSalida != null ? horaSalida : LocalDateTime.now();
+        return Duration.between(horaIngreso, fin).toMinutes();
     }
 
     public String getTiempoPermanenciaFormateado() {
-        if (!estaDentro) {
-            return "Ya salió";
-        }
-
-        long minutosTotal = getMinutosPermanencia();
-        long horas = minutosTotal / 60;
-        long minutos = minutosTotal % 60;
-
-        if (horas > 0 && minutos > 0) {
-            return horas + " horas y " + minutos + " minutos";
-        } else if (horas > 0) {
-            return horas + " horas";
-        } else {
-            return minutos + " minutos";
-        }
+        if (!estaDentro) return "Fuera del parqueadero";
+        long min = getMinutosPermanencia();
+        long h = min / 60;
+        long m = min % 60;
+        return (h > 0 ? h + "h " : "") + m + "m";
     }
+
+    // Getters
+    public String getPlaca() { return placa; }
+    public TipoVehiculo getTipo() { return tipo; }
+    public String getNombreConductor() { return nombreConductor; }
+    public String getIdentificacionConductor() { return identificacionConductor; }
+    public String getIdUsuarioDueno() { return idUsuarioDueno; }
+    public String getEspacioAsignado() { return espacioAsignado; }
+    public boolean isEstaDentro() { return estaDentro; }
 
     @Override
     public String toString() {
-        return placa + " | " + tipo + " | " + nombreConductor +
-                " | Espacio: " + espacioAsignado +
-                " | Tiempo: " + getTiempoPermanenciaFormateado();
+        return placa + " (" + tipo + ") - Dueño: " + idUsuarioDueno;
     }
 }
