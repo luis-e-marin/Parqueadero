@@ -9,13 +9,13 @@ import uniquindio.edu.co.model.Cuenta;
 import uniquindio.edu.co.model.Parqueadero;
 import uniquindio.edu.co.utils.Navegador;
 
-public class ParqueaderoController {
+public class OperadorController {
 
     @FXML private TextField txtPlaca;
     @FXML private ComboBox<TipoVehiculo> comboTipo;
     @FXML private TextField txtNombreConductor;
     @FXML private TextField txtIdConductor;
-    @FXML private ComboBox<TipoUsuario> comboTipoUsuario;   // ← Nuevo para descuento
+    @FXML private ComboBox<TipoUsuario> comboTipoUsuario;   // ← Nuevo
     @FXML private TextField txtPlacaSalida;
     @FXML private TextArea areaResultado;
     @FXML private Button btnVolver;
@@ -25,8 +25,12 @@ public class ParqueaderoController {
 
     @FXML
     public void initialize() {
-        comboTipo.getItems().addAll(TipoVehiculo.values());
-        comboTipoUsuario.getItems().addAll(TipoUsuario.values());
+        if (comboTipo != null) {
+            comboTipo.getItems().addAll(TipoVehiculo.values());
+        }
+        if (comboTipoUsuario != null) {
+            comboTipoUsuario.getItems().addAll(TipoUsuario.values());
+        }
     }
 
     public void setCuentaActual(Cuenta cuenta) {
@@ -53,11 +57,11 @@ public class ParqueaderoController {
                 return;
             }
 
-            // Versión con TipoUsuario para aplicar descuento
+            // Ahora pasamos también el TipoUsuario para aplicar descuento
             parqueadero.registrarIngreso(placa, tipoVehiculo, nombre, id, tipoUsuario);
 
             areaResultado.setText("✓ Ingreso registrado correctamente\nPlaca: " + placa.toUpperCase()
-                    + "\nTipo usuario: " + tipoUsuario);
+                    + "\nTipo de usuario: " + tipoUsuario);
 
             // Limpiar campos
             txtPlaca.clear();
@@ -97,13 +101,25 @@ public class ParqueaderoController {
     }
 
     @FXML
-    public void volverAlAdmin() {
+    public void volverAlMenuOperador() {
         try {
             Stage stage = (Stage) btnVolver.getScene().getWindow();
-            Navegador.volverAlAdmin(stage);
+            Navegador.irA("/view/OperadorMenu.fxml", stage);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("No se pudo volver al menú principal");
+            alert.setContentText("No se pudo volver al menú del operador");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    public void volverAlLogin() {
+        try {
+            Stage stage = (Stage) btnVolver.getScene().getWindow();
+            Navegador.irA("/view/LoginView.fxml", stage);
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("No se pudo volver al login");
             alert.showAndWait();
         }
     }

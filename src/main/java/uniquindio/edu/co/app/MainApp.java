@@ -31,7 +31,7 @@ public class MainApp extends Application {
             System.out.println("✓ Aplicación iniciada correctamente - Login cargado");
 
         } catch (Exception e) {
-            System.err.println("=== ERROR CRÍTICO AL INICIAR LA APLICACIÓN ===");
+            System.out.println("=== ERROR CRÍTICO AL INICIAR LA APLICACIÓN ===");
             e.printStackTrace();
 
            

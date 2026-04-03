@@ -42,7 +42,7 @@ public class VehiculoController {
                 return;
             }
 
-            Vehiculo vehiculo = new Vehiculo(placa, tipo, usuario.getNombre(), idUsuario, idUsuario);
+            Vehiculo vehiculo = new Vehiculo(placa, tipo, usuario.getNombre(), idUsuario);
             usuario.agregarVehiculo(vehiculo);
 
             areaResultado.setText("✓ Vehículo agregado correctamente a " + usuario.getNombre());

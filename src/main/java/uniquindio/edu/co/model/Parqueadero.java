@@ -1,6 +1,7 @@
 package uniquindio.edu.co.model;
 
 import uniquindio.edu.co.enums.Rol;
+import uniquindio.edu.co.enums.TipoUsuario;
 import uniquindio.edu.co.enums.TipoVehiculo;
 import uniquindio.edu.co.exceptions.*;
 
@@ -16,10 +17,9 @@ public class Parqueadero {
     private final List<Cuenta> cuentas;
     private final List<Usuario> usuariosRegistrados;
 
-    private  Tarifa tarifaCarro;
-    private  Tarifa tarifaMoto;
-    private  Tarifa tarifaBicicleta;
-
+    private Tarifa tarifaCarro;
+    private Tarifa tarifaMoto;
+    private Tarifa tarifaBicicleta;
 
     public static Parqueadero getInstance() {
         if (instancia == null) {
@@ -41,9 +41,7 @@ public class Parqueadero {
 
     private void inicializarEspacios() {
         for (int i = 1; i <= 10; i++) espacios.add(new Espacio("C" + i, TipoVehiculo.CARRO));
-
         for (int j = 1; j <= 8; j++)  espacios.add(new Espacio("M" + j, TipoVehiculo.MOTO));
-
         for (int k = 1; k <= 5; k++)  espacios.add(new Espacio("B" + k, TipoVehiculo.BICICLETA));
     }
 
@@ -58,32 +56,102 @@ public class Parqueadero {
         cuentas.add(new Cuenta("operador", "1234", Rol.OPERADOR, null));
     }
 
-
     public Cuenta login(String username, String password) throws UsuarioNoAutorizadoException {
-        for (Cuenta cuenta : cuentas) {
-            if (cuenta.intentarLogin(username, password)) {
-                return cuenta;
+        for (Cuenta c : cuentas) {
+            if (c.intentarLogin(username, password)) {
+                return c;
             }
         }
         throw new UsuarioNoAutorizadoException("Credenciales incorrectas");
     }
 
+    // ====================== REGISTRAR INGRESO CON TIPO DE USUARIO ======================
+    public void registrarIngreso(String placa, TipoVehiculo tipoVehiculo, String nombreConductor,
+                                 String identificacionConductor, TipoUsuario tipoUsuario) throws Exception {
 
-    public void registrarUsuario(Usuario usuario) {
-        if (buscarUsuarioPorIdentificacion(usuario.getIdentificacion()) != null) {
-            throw new IllegalArgumentException("Ya existe un usuario con esa identificación");
+        if (placa == null || placa.trim().isEmpty()) {
+            throw new IllegalArgumentException("La placa no puede estar vacía");
         }
-        usuariosRegistrados.add(usuario);
-    }
+        if (tipoVehiculo == null) {
+            throw new IllegalArgumentException("Debe seleccionar un tipo de vehículo");
+        }
+        if (nombreConductor == null || nombreConductor.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del conductor es obligatorio");
+        }
+        if (identificacionConductor == null || identificacionConductor.trim().isEmpty()) {
+            throw new IllegalArgumentException("La identificación es obligatoria");
+        }
+        if (tipoUsuario == null) {
+            throw new IllegalArgumentException("Debe seleccionar tipo de usuario");
+        }
 
-    public Usuario buscarUsuarioPorIdentificacion(String identificacion) {
-        return usuariosRegistrados.stream()
-                .filter(usuario -> usuario.getIdentificacion().equalsIgnoreCase(identificacion))
+        placa = placa.trim().toUpperCase();
+
+        String finalPlaca = placa;
+        if (vehiculosDentro.stream().anyMatch(v -> v.getPlaca().equals(finalPlaca))) {
+            throw new PlacaDuplicadaException(placa);
+        }
+
+        Espacio espacio = espacios.stream()
+                .filter(e -> e.estaDisponible() && e.getTipo() == tipoVehiculo)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new SinEspaciosException(tipoVehiculo));
+
+        Vehiculo vehiculo = new Vehiculo(placa, tipoVehiculo, nombreConductor.trim(), identificacionConductor.trim());
+        vehiculo.registrarIngreso(espacio.getCodigo());
+        espacio.ocupar(vehiculo);
+        vehiculosDentro.add(vehiculo);
+
+        // Agregar vehículo al usuario si existe
+        Usuario propietario = buscarUsuarioPorIdentificacion(identificacionConductor);
+        if (propietario != null) {
+            propietario.agregarVehiculo(vehiculo);
+        }
+
+        System.out.println("✓ Ingreso registrado: " + placa + " | Usuario: " + tipoUsuario);
     }
 
+    // ====================== REGISTRAR SALIDA ======================
+    public double registrarSalida(String placa) throws Exception {
+        if (placa == null || placa.trim().isEmpty()) {
+            throw new IllegalArgumentException("La placa no puede estar vacía");
+        }
+
+        final String placaFinal = placa.trim().toUpperCase();
+
+        Vehiculo vehiculo = vehiculosDentro.stream()
+                .filter(v -> v.getPlaca().equals(placaFinal))
+                .findFirst()
+                .orElseThrow(() -> new VehiculoNoEncontradoException(placaFinal));
+
+        Tarifa tarifa = switch (vehiculo.getTipo()) {
+            case CARRO -> tarifaCarro;
+            case MOTO -> tarifaMoto;
+            case BICICLETA -> tarifaBicicleta;
+        };
+
+        long minutos = vehiculo.getMinutosPermanencia();
+        double valor = tarifa.calcularValor(minutos);
+
+        // Liberar espacio
+        espacios.stream()
+                .filter(e -> e.getCodigo().equals(vehiculo.getEspacioAsignado()))
+                .findFirst()
+                .ifPresent(e -> {
+                    try { e.liberar(); } catch (Exception ignored) {}
+                });
+
+        vehiculosDentro.remove(vehiculo);
+        vehiculo.registrarSalida();
+
+        System.out.println("✓ Salida registrada: " + placaFinal + " | Valor: $" + valor);
+        return valor;
+    }
+
+    // ====================== BUSCAR USUARIO ======================
     public Usuario buscarUsuarioPorPlaca(String placa) {
+        if (placa == null) return null;
+        placa = placa.trim().toUpperCase();
         for (Usuario usuario : usuariosRegistrados) {
             if (usuario.tieneVehiculoConPlaca(placa)) {
                 return usuario;
@@ -92,7 +160,23 @@ public class Parqueadero {
         return null;
     }
 
+    public Usuario buscarUsuarioPorIdentificacion(String identificacion) {
+        if (identificacion == null) return null;
+        return usuariosRegistrados.stream()
+                .filter(u -> u.getIdentificacion().equalsIgnoreCase(identificacion))
+                .findFirst()
+                .orElse(null);
+    }
 
+    public void registrarUsuario(Usuario usuario) {
+        if (usuario == null) return;
+        if (buscarUsuarioPorIdentificacion(usuario.getIdentificacion()) != null) {
+            throw new IllegalArgumentException("Ya existe un usuario con esa identificación");
+        }
+        usuariosRegistrados.add(usuario);
+    }
+
+    // ====================== OTROS ======================
     public boolean deshabilitarEspacio(String codigo) {
         for (Espacio espacio : espacios) {
             if (espacio.getCodigo().equalsIgnoreCase(codigo)) {
@@ -112,72 +196,76 @@ public class Parqueadero {
         throw new IllegalArgumentException("No se encontró el espacio: " + codigo);
     }
 
-    // INGRESO Y SALIDA
-    public void registrarIngreso(Vehiculo vehiculo, Cuenta cuentaActual) throws Exception {
-        if (!cuentaActual.esAdministrador() && !cuentaActual.esOperador()) {
-            throw new UsuarioNoAutorizadoException("registrar ingreso");
+    // ====================== CONSULTA PARA OPERADOR ======================
+    public String getVehiculosDentroResumen() {
+        if (vehiculosDentro.isEmpty()) {
+            return "No hay vehículos dentro del parqueadero en este momento.";
         }
 
-        // Validar placa duplicada
-        if (vehiculosDentro.stream().anyMatch(vehiculos -> vehiculos.getPlaca().equalsIgnoreCase(vehiculo.getPlaca()))) {
-            throw new PlacaDuplicadaException(vehiculo.getPlaca());
+        StringBuilder sb = new StringBuilder();
+        sb.append("VEHÍCULOS DENTRO DEL PARQUEADERO\n");
+        sb.append("Total: ").append(vehiculosDentro.size()).append("\n\n");
+
+        for (Vehiculo v : vehiculosDentro) {
+            sb.append("Placa: ").append(v.getPlaca())
+                    .append(" | Tipo: ").append(v.getTipo())
+                    .append(" | Conductor: ").append(v.getNombreConductor())
+                    .append(" | ID: ").append(v.getIdentificacionConductor())
+                    .append(" | Espacio: ").append(v.getEspacioAsignado() != null ? v.getEspacioAsignado() : "N/A")
+                    .append(" | Tiempo: ").append(v.getTiempoPermanenciaFormateado())
+                    .append("\n");
         }
-
-        // Buscar espacio disponible del mismo tipo
-        Espacio espacio = espacios.stream()
-                .filter(espacios -> espacios.estaDisponible() && espacios.getTipo() == vehiculo.getTipo())
-                .findFirst()
-                .orElseThrow(() -> new SinEspaciosException(vehiculo.getTipo()));
-
-        // Registrar ingreso
-        vehiculo.registrarIngreso(espacio.getCodigo());
-        espacio.ocupar(vehiculo);
-        vehiculosDentro.add(vehiculo);
-
-        // Agregar vehículo al usuario si existe
-        Usuario propietario = buscarUsuarioPorIdentificacion(vehiculo.getIdUsuarioPropietario());
-        if (propietario != null) {
-            propietario.agregarVehiculo(vehiculo);
-        }
+        return sb.toString();
     }
 
-    public double registrarSalida(String placa, Cuenta cuentaActual) throws Exception {
-        if (!cuentaActual.esAdministrador() && !cuentaActual.esOperador()) {
-            throw new UsuarioNoAutorizadoException("registrar salida");
-        }
+    public String getEspaciosDisponiblesResumen() {
+        long total = espacios.size();
+        long ocupados = espacios.stream().filter(e -> !e.estaDisponible()).count();
+        long disponibles = total - ocupados;
 
-        Vehiculo vehiculo = vehiculosDentro.stream()
-                .filter(vehiculos -> vehiculos.getPlaca().equalsIgnoreCase(placa))
-                .findFirst()
-                .orElseThrow(() -> new VehiculoNoEncontradoException(placa));
+        long carrosDisp = espacios.stream()
+                .filter(e -> e.getTipo() == TipoVehiculo.CARRO && e.estaDisponible()).count();
+        long motosDisp = espacios.stream()
+                .filter(e -> e.getTipo() == TipoVehiculo.MOTO && e.estaDisponible()).count();
+        long bicisDisp = espacios.stream()
+                .filter(e -> e.getTipo() == TipoVehiculo.BICICLETA && e.estaDisponible()).count();
 
-        Tarifa tarifa = switch (vehiculo.getTipo()) {
-            case CARRO -> tarifaCarro;
-            case MOTO -> tarifaMoto;
-            case BICICLETA -> tarifaBicicleta;
-        };
-
-        long minutos = vehiculo.getMinutosPermanencia();
-        Usuario proietario = buscarUsuarioPorPlaca(placa);
-        double valor = (proietario != null)
-                ? tarifa.calcularValorConDescuentoUsuario(minutos, proietario.getDescuento())
-                : tarifa.calcularValor(minutos);
-
-        // Liberar espacio
-        espacios.stream()
-                .filter(espacio -> espacio.getCodigo().equals(vehiculo.getEspacioAsignado()))
-                .findFirst()
-                .ifPresent(espacio -> {
-                    try { espacio.liberar(); } catch (Exception ignored) {}
-                });
-
-        vehiculosDentro.remove(vehiculo);
-        vehiculo.registrarSalida();
-
-        return valor;
+        return "RESUMEN DE ESPACIOS\n\n" +
+                "Total espacios: " + total + "\n" +
+                "Ocupados: " + ocupados + "\n" +
+                "Disponibles: " + disponibles + "\n\n" +
+                "Carros disponibles: " + carrosDisp + "\n" +
+                "Motos disponibles: " + motosDisp + "\n" +
+                "Bicicletas disponibles: " + bicisDisp;
     }
 
-    //  GETTERS
+    // Reporte simple para operador
+    public String generarReporteSimple() {
+        long totalIngresosHoy = vehiculosDentro.size(); // aproximado
+        double ingresosTotales = 0; // podrías calcular si guardas pagos, pero por ahora simple
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("REPORTE SIMPLE - PARQUEADERO\n\n");
+        sb.append("Vehículos dentro: ").append(vehiculosDentro.size()).append("\n");
+        sb.append("Espacios totales: ").append(espacios.size()).append("\n");
+        sb.append("Espacios ocupados: ").append(espacios.stream().filter(e -> !e.estaDisponible()).count()).append("\n");
+        sb.append("Tiempo promedio permanencia: ").append(calcularTiempoPromedio()).append("\n");
+
+        return sb.toString();
+    }
+
+    private String calcularTiempoPromedio() {
+        if (vehiculosDentro.isEmpty()) return "0h 0m";
+        long totalMinutos = 0;
+        for (Vehiculo v : vehiculosDentro) {
+            totalMinutos += v.getMinutosPermanencia();
+        }
+        long promedio = totalMinutos / vehiculosDentro.size();
+        long horas = promedio / 60;
+        long mins = promedio % 60;
+        return horas + "h " + mins + "m";
+    }
+
     public List<Espacio> getEspacios() {
         return new ArrayList<>(espacios);
     }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<VBox fx:id="root" spacing="15" alignment="CENTER" prefWidth="520" prefHeight="500"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="uniquindio.edu.co.controller.IngresoController">
+
+    <Label text="REGISTRAR INGRESO" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="txtPlaca" promptText="Placa del vehículo"/>
+    <ComboBox fx:id="comboTipoVehiculo" promptText="Tipo de vehículo"/>
+    <TextField fx:id="txtNombreConductor" promptText="Nombre del conductor"/>
+    <TextField fx:id="txtIdConductor" promptText="Identificación"/>
+
+    <ComboBox fx:id="comboTipoUsuario" promptText="Tipo de usuario (para descuento)"/>
+
+    <Button text="Registrar Ingreso" onAction="#registrarIngreso" prefWidth="340"/>
+    <Button text="Volver al Menú" onAction="#volverAlMenu" prefWidth="340"/>
+
+    <TextArea fx:id="areaResultado" prefHeight="140" editable="false"/>
+</VBox>

@@ -8,27 +8,36 @@ public class Vehiculo {
 
     private final String placa;
     private final TipoVehiculo tipo;
-    private String nombreConductor;
-    private String identificacionConductor;
-    private String idUsuarioPropietario;
-
+    private final String nombreConductor;
+    private final String identificacionConductor;   // ← Nombre claro y consistente
+    private String espacioAsignado;
     private LocalDateTime horaIngreso;
     private LocalDateTime horaSalida;
-    private String espacioAsignado;
     private boolean estaDentro;
 
-    public Vehiculo(String placa, TipoVehiculo tipo, String nombreConductor,
-                    String identificacionConductor, String idUsuarioPropietario) {
+    // Constructor correcto con 4 parámetros
+    public Vehiculo(String placa, TipoVehiculo tipo, String nombreConductor, String identificacionConductor) {
 
-        if (placa == null || placa.trim().isEmpty()) throw new IllegalArgumentException("Placa obligatoria");
-        if (tipo == null) throw new IllegalArgumentException("Tipo de vehículo obligatorio");
-        if (idUsuarioPropietario == null || idUsuarioPropietario.trim().isEmpty()) throw new IllegalArgumentException("Debe tener un dueño");
+        if (placa == null || placa.trim().isEmpty()) {
+            throw new IllegalArgumentException("Placa obligatoria");
+        }
+        if (tipo == null) {
+            throw new IllegalArgumentException("Tipo de vehículo obligatorio");
+        }
+        if (nombreConductor == null || nombreConductor.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nombre del conductor obligatorio");
+        }
+        if (identificacionConductor == null || identificacionConductor.trim().isEmpty()) {
+            throw new IllegalArgumentException("Identificación del conductor obligatoria");
+        }
 
-        this.placa = placa.toUpperCase().trim();
+        this.placa = placa.trim().toUpperCase();
         this.tipo = tipo;
-        this.nombreConductor = nombreConductor != null ? nombreConductor.trim() : "";
-        this.identificacionConductor = identificacionConductor != null ? identificacionConductor.trim() : "";
-        this.idUsuarioPropietario = idUsuarioPropietario.trim();
+        this.nombreConductor = nombreConductor.trim();
+        this.identificacionConductor = identificacionConductor.trim();
+        this.espacioAsignado = null;
+        this.horaIngreso = null;
+        this.horaSalida = null;
         this.estaDentro = false;
     }
 
@@ -47,28 +56,31 @@ public class Vehiculo {
     public long getMinutosPermanencia() {
         if (horaIngreso == null) return 0;
         LocalDateTime fin = horaSalida != null ? horaSalida : LocalDateTime.now();
-        return Duration.between(horaIngreso, fin).toMinutes();
+        return Math.max(Duration.between(horaIngreso, fin).toMinutes(), 1);
     }
 
     public String getTiempoPermanenciaFormateado() {
         if (!estaDentro) return "Fuera del parqueadero";
         long minutos = getMinutosPermanencia();
-        long hora = minutos / 60;
-        long minuto = minutos % 60;
-        return (hora > 0 ? hora + "hora " : "") + minuto + "m";
+        long horas = minutos / 60;
+        long mins = minutos % 60;
+        return (horas > 0 ? horas + "h " : "") + mins + "m";
     }
 
     // Getters
     public String getPlaca() { return placa; }
     public TipoVehiculo getTipo() { return tipo; }
     public String getNombreConductor() { return nombreConductor; }
-    public String getIdentificacionConductor() { return identificacionConductor; }
-    public String getIdUsuarioPropietario() { return idUsuarioPropietario; }
+
+    public String getIdentificacionConductor() {
+        return identificacionConductor;
+    }
+
     public String getEspacioAsignado() { return espacioAsignado; }
     public boolean isEstaDentro() { return estaDentro; }
 
     @Override
     public String toString() {
-        return placa + " (" + tipo + ") - Dueño: " + idUsuarioPropietario;
+        return placa + " | " + tipo + " | " + nombreConductor;
     }
 }

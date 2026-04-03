@@ -59,7 +59,7 @@ public class Usuario {
             throw new IllegalArgumentException("El vehículo no puede ser null");
         }
         // Verificar que el vehículo pertenezca a este usuario
-        if (!vehiculo.getIdUsuarioPropietario().equals(this.identificacion)) {
+        if (!vehiculo.getIdentificacionConductor().equals(this.identificacion)) {
             throw new IllegalArgumentException("Este vehículo no pertenece a este usuario");
         }
         // Evitar duplicados de placa
