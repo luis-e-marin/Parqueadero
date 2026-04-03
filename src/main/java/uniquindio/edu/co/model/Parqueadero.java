@@ -102,16 +102,17 @@ public class Parqueadero {
         espacio.ocupar(vehiculo);
         vehiculosDentro.add(vehiculo);
 
-        // Agregar vehículo al usuario si existe
+        // ← ESTO ES CLAVE: Guardamos el tipo de usuario en el propietario
         Usuario propietario = buscarUsuarioPorIdentificacion(identificacionConductor);
         if (propietario != null) {
+            propietario.setTipoUsuario(tipoUsuario);   // actualizamos el tipo
             propietario.agregarVehiculo(vehiculo);
         }
 
-        System.out.println("✓ Ingreso registrado: " + placa + " | Usuario: " + tipoUsuario);
+        System.out.println("✓ Ingreso registrado: " + placa + " | Tipo usuario: " + tipoUsuario);
     }
 
-    // ====================== REGISTRAR SALIDA ======================
+    // ====================== REGISTRAR SALIDA CON DESCUENTO ======================
     public double registrarSalida(String placa) throws Exception {
         if (placa == null || placa.trim().isEmpty()) {
             throw new IllegalArgumentException("La placa no puede estar vacía");
@@ -131,7 +132,12 @@ public class Parqueadero {
         };
 
         long minutos = vehiculo.getMinutosPermanencia();
-        double valor = tarifa.calcularValor(minutos);
+
+        // Aplicar descuento según tipo de usuario del propietario
+        Usuario propietario = buscarUsuarioPorIdentificacion(vehiculo.getIdentificacionConductor());
+        double valor = (propietario != null && propietario.getTipoUsuario() != null)
+                ? tarifa.calcularValorConDescuento(minutos, propietario.getTipoUsuario())
+                : tarifa.calcularValor(minutos);
 
         // Liberar espacio
         espacios.stream()
@@ -144,7 +150,7 @@ public class Parqueadero {
         vehiculosDentro.remove(vehiculo);
         vehiculo.registrarSalida();
 
-        System.out.println("✓ Salida registrada: " + placaFinal + " | Valor: $" + valor);
+        System.out.println("✓ Salida: " + placaFinal + " | Valor final: $" + valor);
         return valor;
     }
 
@@ -176,27 +182,7 @@ public class Parqueadero {
         usuariosRegistrados.add(usuario);
     }
 
-    // ====================== OTROS ======================
-    public boolean deshabilitarEspacio(String codigo) {
-        for (Espacio espacio : espacios) {
-            if (espacio.getCodigo().equalsIgnoreCase(codigo)) {
-                return espacio.deshabilitar();
-            }
-        }
-        return false;
-    }
-
-    public void habilitarEspacio(String codigo) {
-        for (Espacio espacio : espacios) {
-            if (espacio.getCodigo().equalsIgnoreCase(codigo)) {
-                espacio.habilitar();
-                return;
-            }
-        }
-        throw new IllegalArgumentException("No se encontró el espacio: " + codigo);
-    }
-
-    // ====================== CONSULTA PARA OPERADOR ======================
+    // ====================== CONSULTAS PARA OPERADOR ======================
     public String getVehiculosDentroResumen() {
         if (vehiculosDentro.isEmpty()) {
             return "No hay vehículos dentro del parqueadero en este momento.";
@@ -223,12 +209,9 @@ public class Parqueadero {
         long ocupados = espacios.stream().filter(e -> !e.estaDisponible()).count();
         long disponibles = total - ocupados;
 
-        long carrosDisp = espacios.stream()
-                .filter(e -> e.getTipo() == TipoVehiculo.CARRO && e.estaDisponible()).count();
-        long motosDisp = espacios.stream()
-                .filter(e -> e.getTipo() == TipoVehiculo.MOTO && e.estaDisponible()).count();
-        long bicisDisp = espacios.stream()
-                .filter(e -> e.getTipo() == TipoVehiculo.BICICLETA && e.estaDisponible()).count();
+        long carrosDisp = espacios.stream().filter(e -> e.getTipo() == TipoVehiculo.CARRO && e.estaDisponible()).count();
+        long motosDisp = espacios.stream().filter(e -> e.getTipo() == TipoVehiculo.MOTO && e.estaDisponible()).count();
+        long bicisDisp = espacios.stream().filter(e -> e.getTipo() == TipoVehiculo.BICICLETA && e.estaDisponible()).count();
 
         return "RESUMEN DE ESPACIOS\n\n" +
                 "Total espacios: " + total + "\n" +
@@ -239,31 +222,56 @@ public class Parqueadero {
                 "Bicicletas disponibles: " + bicisDisp;
     }
 
-    // Reporte simple para operador
     public String generarReporteSimple() {
-        long totalIngresosHoy = vehiculosDentro.size(); // aproximado
-        double ingresosTotales = 0; // podrías calcular si guardas pagos, pero por ahora simple
-
         StringBuilder sb = new StringBuilder();
-        sb.append("REPORTE SIMPLE - PARQUEADERO\n\n");
-        sb.append("Vehículos dentro: ").append(vehiculosDentro.size()).append("\n");
+        sb.append("REPORTE SIMPLE\n\n");
+        sb.append("Vehículos dentro ahora: ").append(vehiculosDentro.size()).append("\n");
         sb.append("Espacios totales: ").append(espacios.size()).append("\n");
         sb.append("Espacios ocupados: ").append(espacios.stream().filter(e -> !e.estaDisponible()).count()).append("\n");
         sb.append("Tiempo promedio permanencia: ").append(calcularTiempoPromedio()).append("\n");
-
         return sb.toString();
     }
 
     private String calcularTiempoPromedio() {
         if (vehiculosDentro.isEmpty()) return "0h 0m";
-        long totalMinutos = 0;
-        for (Vehiculo v : vehiculosDentro) {
-            totalMinutos += v.getMinutosPermanencia();
-        }
+        long totalMinutos = vehiculosDentro.stream()
+                .mapToLong(Vehiculo::getMinutosPermanencia)
+                .sum();
         long promedio = totalMinutos / vehiculosDentro.size();
         long horas = promedio / 60;
         long mins = promedio % 60;
         return horas + "h " + mins + "m";
+    }
+
+    public boolean deshabilitarEspacio(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            return false;
+        }
+
+        for (Espacio espacio : espacios) {
+            if (espacio.getCodigo().equalsIgnoreCase(codigo)) {
+                // No se puede deshabilitar si está ocupado
+                if (!espacio.estaDisponible()) {
+                    return false;
+                }
+                return espacio.deshabilitar();
+            }
+        }
+        return false; // no se encontró el espacio
+    }
+
+    public void habilitarEspacio(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El código del espacio no puede estar vacío");
+        }
+
+        for (Espacio espacio : espacios) {
+            if (espacio.getCodigo().equalsIgnoreCase(codigo)) {
+                espacio.habilitar();
+                return;
+            }
+        }
+        throw new IllegalArgumentException("No se encontró el espacio con código: " + codigo);
     }
 
     public List<Espacio> getEspacios() {

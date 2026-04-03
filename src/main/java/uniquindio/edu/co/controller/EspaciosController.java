@@ -10,20 +10,13 @@ import uniquindio.edu.co.utils.Navegador;
 
 public class EspaciosController {
 
-    @FXML
-    private TableView<Espacio> tablaEspacios;
-    @FXML
-    private TableColumn<Espacio, String> colCodigo;
-    @FXML
-    private TableColumn<Espacio, String> colTipo;
-    @FXML
-    private TableColumn<Espacio, String> colEstado;
-    @FXML
-    private TableColumn<Espacio, String> colVehiculo;
-    @FXML
-    private TextField txtCodigo;
-    @FXML
-    private Button btnVolver;
+    @FXML private TableView<Espacio> tablaEspacios;
+    @FXML private TableColumn<Espacio, String> colCodigo;
+    @FXML private TableColumn<Espacio, String> colTipo;
+    @FXML private TableColumn<Espacio, String> colEstado;
+    @FXML private TableColumn<Espacio, String> colVehiculo;
+    @FXML private TextField txtCodigo;
+    @FXML private Button btnVolver;
 
     private final Parqueadero parqueadero = Parqueadero.getInstance();
 
@@ -57,13 +50,18 @@ public class EspaciosController {
             actualizarTabla();
             mostrarMensaje("Espacio deshabilitado correctamente");
         } else {
-            mostrarMensaje("No se pudo deshabilitar (posiblemente está ocupado)");
+            mostrarMensaje("No se pudo deshabilitar el espacio (puede estar ocupado o no existe)");
         }
     }
 
     @FXML
     private void habilitarEspacio() {
         String codigo = txtCodigo.getText().trim();
+        if (codigo.isEmpty()) {
+            mostrarMensaje("Ingrese el código del espacio");
+            return;
+        }
+
         try {
             parqueadero.habilitarEspacio(codigo);
             actualizarTabla();
@@ -73,24 +71,21 @@ public class EspaciosController {
         }
     }
 
+    @FXML
+    public void volverAlMenu() {
+        try {
+            Stage stage = (Stage) btnVolver.getScene().getWindow();   // usa btnVolver que tienes en FXML
+            Navegador.irA("/view/AdminView.fxml", stage);             // o /view/OperadorMenu.fxml si es para operador
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("No se pudo volver al menú");
+            alert.showAndWait();
+        }
+    }
+
     private void mostrarMensaje(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    @FXML
-    public void volverAlAdmin() {
-        try {
-
-            Stage stage = (Stage) tablaEspacios.getScene().getWindow();
-            Navegador.volverAlAdmin(stage);
-
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("No se pudo volver al menú principal");
-            alert.showAndWait();
-        }
     }
 }
