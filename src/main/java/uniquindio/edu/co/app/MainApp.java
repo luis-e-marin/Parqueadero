@@ -28,18 +28,18 @@ public class MainApp extends Application {
             stage.centerOnScreen();
             stage.show();
 
-            System.out.println("✓ Aplicación iniciada correctamente - Login cargado");
+            System.out.println(" Aplicación iniciada correctamente - Login cargado");
 
-        } catch (Exception e) {
-            System.out.println("=== ERROR CRÍTICO AL INICIAR LA APLICACIÓN ===");
-            e.printStackTrace();
+        } catch (Exception exception) {
+            System.out.println(" ERROR CRÍTICO AL INICIAR LA APLICACIÓN ===");
+            exception.printStackTrace();
 
            
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
                     javafx.scene.control.Alert.AlertType.ERROR);
             alert.setTitle("Error de Inicio");
             alert.setHeaderText("No se pudo iniciar PARKUQ");
-            alert.setContentText("Error al cargar la pantalla de login.\n\n" + e.getMessage());
+            alert.setContentText("Error al cargar la pantalla de login.\n\n" + exception.getMessage());
             alert.showAndWait();
         }
     }

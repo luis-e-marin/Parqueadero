@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import uniquindio.edu.co.enums.TipoVehiculo;
+import uniquindio.edu.co.model.Cuenta;
 import uniquindio.edu.co.model.Parqueadero;
 import uniquindio.edu.co.model.Usuario;
 import uniquindio.edu.co.model.Vehiculo;
@@ -93,5 +94,11 @@ public class VehiculoController {
             alert.setContentText("No se pudo regresar al menú principal.");
             alert.showAndWait();
         }
+    }
+
+    private Cuenta cuentaActual;
+
+    public void setCuentaActual(Cuenta cuenta) {
+        this.cuentaActual = cuenta;
     }
 }

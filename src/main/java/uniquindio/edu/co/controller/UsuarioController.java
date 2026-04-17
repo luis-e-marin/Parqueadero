@@ -2,8 +2,10 @@ package uniquindio.edu.co.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import uniquindio.edu.co.enums.TipoUsuario;
+import uniquindio.edu.co.model.Cuenta;
 import uniquindio.edu.co.model.Parqueadero;
 import uniquindio.edu.co.model.Usuario;
 import uniquindio.edu.co.utils.Navegador;
@@ -11,39 +13,48 @@ import uniquindio.edu.co.utils.Navegador;
 public class UsuarioController {
 
     @FXML private TextField txtNombre;
-    @FXML private TextField txtId;
-    @FXML private ComboBox<TipoUsuario> comboTipo;
+    @FXML private TextField txtIdentificacion;
+    @FXML private ComboBox<TipoUsuario> comboTipoUsuario;
     @FXML private TextArea areaResultado;
-    @FXML private Button btnVolver;
+    @FXML private VBox root;
 
     private final Parqueadero parqueadero = Parqueadero.getInstance();
+    private Usuario usuarioActual;
+    private Cuenta cuentaActual;
 
+    public void setCuentaActual(Cuenta cuenta) {
+        this.cuentaActual = cuenta;
+    }
     @FXML
     public void initialize() {
-        comboTipo.getItems().addAll(TipoUsuario.values());
+        if (comboTipoUsuario != null) {
+            comboTipoUsuario.getItems().addAll(TipoUsuario.values());
+        }
     }
 
     @FXML
-    public void crearUsuario() {
+    public void registrarUsuario() {
+        if (cuentaActual == null) {
+            areaResultado.setText("Error: No hay sesión activa (debe ser Admin)");
+            return;
+        }
+
         try {
             String nombre = txtNombre.getText().trim();
-            String id = txtId.getText().trim();
-            TipoUsuario tipo = comboTipo.getValue();
+            String id = txtIdentificacion.getText().trim();
+            TipoUsuario tipo = comboTipoUsuario.getValue();
 
             if (nombre.isEmpty() || id.isEmpty() || tipo == null) {
                 areaResultado.setText("Error: Complete todos los campos");
                 return;
             }
 
-            Usuario usuario = new Usuario(nombre, id, tipo);
-            parqueadero.registrarUsuario(usuario);
+            parqueadero.registrarUsuarioAutorizado(nombre, id, tipo);
 
-            areaResultado.setText("✓ Usuario creado exitosamente:\n" + usuario);
+            areaResultado.setText("✓ Usuario registrado correctamente:\n" +
+                    "Nombre: " + nombre + "\nID: " + id + "\nTipo: " + tipo);
 
-            // Limpiar campos
-            txtNombre.clear();
-            txtId.clear();
-            comboTipo.setValue(null);
+            limpiarCampos();
 
         } catch (Exception e) {
             areaResultado.setText("Error: " + e.getMessage());
@@ -52,60 +63,66 @@ public class UsuarioController {
 
     @FXML
     public void buscarUsuario() {
-        String id = txtId.getText().trim();
+        String id = txtIdentificacion.getText().trim();
         if (id.isEmpty()) {
-            areaResultado.setText("Ingrese una identificación");
+            areaResultado.setText("Ingrese una identificación para buscar");
             return;
         }
 
-        Usuario u = parqueadero.buscarUsuarioPorIdentificacion(id);
-        areaResultado.setText(u != null ? u.toString() : "Usuario no encontrado");
-    }
+        usuarioActual = parqueadero.buscarUsuarioPorIdentificacion(id);
 
-    @FXML
-    public void editarUsuario() {
-        String id = txtId.getText().trim();
-        Usuario u = parqueadero.buscarUsuarioPorIdentificacion(id);
-
-        if (u == null) {
-            areaResultado.setText("Usuario no encontrado");
-            return;
-        }
-
-        u.modificar(txtNombre.getText().trim(), comboTipo.getValue());
-        areaResultado.setText("✓ Usuario actualizado:\n" + u);
-    }
-
-    @FXML
-    public void verVehiculos() {
-        String id = txtId.getText().trim();
-        Usuario u = parqueadero.buscarUsuarioPorIdentificacion(id);
-
-        if (u == null) {
-            areaResultado.setText("Usuario no encontrado");
-            return;
-        }
-
-        StringBuilder sb = new StringBuilder("Vehículos del usuario:\n");
-        if (u.getVehiculos().isEmpty()) {
-            sb.append("Este usuario no tiene vehículos registrados.");
+        if (usuarioActual != null) {
+            areaResultado.setText("Usuario encontrado:\n" + usuarioActual.toString());
+            txtNombre.setText(usuarioActual.getNombre());
+            comboTipoUsuario.setValue(usuarioActual.getTipoUsuario());
         } else {
-            u.getVehiculos().forEach(v -> sb.append(v).append("\n"));
+            areaResultado.setText("No se encontró usuario con ID: " + id);
+            usuarioActual = null;
         }
-        areaResultado.setText(sb.toString());
+    }
+
+    @FXML
+    public void modificarUsuario() {
+        if (usuarioActual == null) {
+            areaResultado.setText("Primero busque un usuario");
+            return;
+        }
+
+        try {
+            String nuevoNombre = txtNombre.getText().trim();
+            TipoUsuario nuevoTipo = comboTipoUsuario.getValue();
+
+            if (nuevoNombre.isEmpty() || nuevoTipo == null) {
+                areaResultado.setText("Complete nombre y tipo de usuario");
+                return;
+            }
+
+            usuarioActual.modificar(nuevoNombre, nuevoTipo);
+
+            areaResultado.setText("✓ Usuario modificado correctamente:\n" + usuarioActual.toString());
+
+            limpiarCampos();
+            usuarioActual = null;
+
+        } catch (Exception e) {
+            areaResultado.setText("Error al modificar: " + e.getMessage());
+        }
+    }
+
+    private void limpiarCampos() {
+        txtNombre.clear();
+        txtIdentificacion.clear();
+        comboTipoUsuario.setValue(null);
     }
 
     @FXML
     public void volverAlAdmin() {
         try {
-            Stage stage = (Stage) areaResultado.getScene().getWindow();
+            Stage stage = (Stage) root.getScene().getWindow();
             Navegador.volverAlAdmin(stage);
         } catch (Exception e) {
-            System.err.println("Error al volver al Admin: " + e.getMessage());
-
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error de navegación");
-            alert.setContentText("No se pudo regresar al menú principal.");
+            alert.setContentText("No se pudo volver al panel de administrador");
             alert.showAndWait();
         }
     }

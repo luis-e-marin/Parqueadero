@@ -1,90 +1,103 @@
 package uniquindio.edu.co.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
 import uniquindio.edu.co.model.Cuenta;
 import uniquindio.edu.co.model.Parqueadero;
 import uniquindio.edu.co.utils.Navegador;
 
 public class OperadorMenuController {
 
-    @FXML private Node root;
+    private static Cuenta cuentaActualEstatica;   // ← Solución para que no se pierda al volver
 
-    private Cuenta cuentaActual;
     private final Parqueadero parqueadero = Parqueadero.getInstance();
 
     public void setCuentaActual(Cuenta cuenta) {
-        this.cuentaActual = cuenta;
+        cuentaActualEstatica = cuenta;
     }
 
     @FXML
-    public void irRegistrarIngreso() {
+    public void irRegistrarIngreso(ActionEvent event) {
+        if (cuentaActualEstatica == null) {
+            mostrarMensaje("Sesión no válida");
+            return;
+        }
+
         try {
-            Stage stage = (Stage) root.getScene().getWindow();
-            Navegador.irA("/view/IngresoView.fxml", stage);   // o ParqueaderoView si usas esa
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/IngresoView.fxml"));
+            Parent vista = loader.load();
+
+            IngresoController controller = loader.getController();
+            controller.setCuentaActual(cuentaActualEstatica);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(vista));
+
         } catch (Exception e) {
-            mostrarMensaje("Error al abrir registro de ingreso");
+            e.printStackTrace();
+            mostrarMensaje("Error al abrir ingreso");
         }
     }
 
     @FXML
-    public void irRegistrarSalida() {
+    public void irRegistrarSalida(ActionEvent event) {
+        if (cuentaActualEstatica == null) {
+            mostrarMensaje("Sesión no válida");
+            return;
+        }
+
         try {
-            Stage stage = (Stage) root.getScene().getWindow();
-            Navegador.irA("/view/SalidaView.fxml", stage);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SalidaView.fxml"));
+            Parent vista = loader.load();
+
+            SalidaController controller = loader.getController();
+            controller.setCuentaActual(cuentaActualEstatica);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(vista));
+
         } catch (Exception e) {
-            mostrarMensaje("Error al abrir registro de salida");
+            e.printStackTrace();
+            mostrarMensaje("Error al abrir salida");
         }
     }
 
     @FXML
     public void verVehiculosDentro() {
-        String resumen = parqueadero.getVehiculosDentroResumen();
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Vehículos Dentro");
-        alert.setHeaderText(null);
-        alert.setContentText(resumen);
-        alert.showAndWait();
+        mostrarMensaje(parqueadero.getVehiculosDentroResumen());
     }
 
     @FXML
     public void verEspaciosDisponibles() {
-        String resumen = parqueadero.getEspaciosDisponiblesResumen();
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Espacios Disponibles");
-        alert.setHeaderText(null);
-        alert.setContentText(resumen);
-        alert.showAndWait();
+        mostrarMensaje(parqueadero.getEspaciosDisponiblesResumen());
     }
 
     @FXML
     public void verReportes() {
-        String reporte = parqueadero.generarReporteSimple();
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Reportes");
-        alert.setHeaderText(null);
-        alert.setContentText(reporte);
-        alert.showAndWait();
+        mostrarMensaje(parqueadero.generarReporteSimple());
     }
 
     @FXML
-    public void cerrarSesion() {
+    public void cerrarSesion(ActionEvent event) {
+        cuentaActualEstatica = null;
         try {
-            Stage stage = (Stage) root.getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Navegador.irA("/view/LoginView.fxml", stage);
         } catch (Exception e) {
             mostrarMensaje("Error al cerrar sesión");
         }
     }
 
-    private void mostrarMensaje(String mensaje) {
+    private void mostrarMensaje(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(mensaje);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
         alert.showAndWait();
     }
 }

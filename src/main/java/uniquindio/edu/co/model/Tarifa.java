@@ -27,19 +27,17 @@ public class Tarifa {
         return horas * valorPorHora;
     }
 
-    // Valor con descuento según Tipo de Usuario (ESTO ES LO QUE NECESITAS)
-    public double calcularValorConDescuento(long minutos, TipoUsuario tipoUsuario) {
-        double valorBase = calcularValor(minutos);
+    // Valor con descuento según Tipo de Usuario
+    public double calcularValorConDescuento(long minutosPermanencia, TipoUsuario tipoUsuario) {
+        double valorBase = calcularValor(minutosPermanencia);
 
-        if (tipoUsuario == null) {
-            return valorBase;
-        }
+        if (tipoUsuario == null) return valorBase;
 
         double descuento = switch (tipoUsuario) {
-            case ESTUDIANTE -> 0.20;      // 20%
-            case DOCENTE -> 0.15;         // 15%
-            case ADMINISTRATIVO -> 0.10;  // 10%
-            case VISITANTE -> 0.0;        // 0%
+            case ESTUDIANTE -> 0.20;
+            case DOCENTE -> 0.15;
+            case ADMINISTRATIVO -> 0.10;
+            case VISITANTE -> 0.0;
         };
 
         return valorBase * (1 - descuento);

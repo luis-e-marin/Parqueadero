@@ -25,7 +25,7 @@ public class Usuario {
 
         this.nombre = nombre.trim();
         this.identificacion = identificacion.trim().toUpperCase();
-        this.tipoUsuario = tipoUsuario;
+        this.tipoUsuario = tipoUsuario;        // ← Aseguramos que se guarde
         this.vehiculos = new ArrayList<>();
     }
 

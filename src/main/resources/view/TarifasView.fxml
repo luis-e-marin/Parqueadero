@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Button?>
+<VBox fx:id="root" alignment="CENTER" prefWidth="520" prefHeight="480"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="uniquindio.edu.co.controller.TarifasController">
+
+    <Label text="GESTIÓN DE TARIFAS"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-padding: 15;"/>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Label text="Carro:" style="-fx-font-size: 14px;"/>
+        <TextField fx:id="txtCarro" promptText="Valor por hora" prefWidth="150"/>
+    </HBox>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Label text="Moto:" style="-fx-font-size: 14px;"/>
+        <TextField fx:id="txtMoto" promptText="Valor por hora" prefWidth="150"/>
+    </HBox>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Label text="Bicicleta:" style="-fx-font-size: 14px;"/>
+        <TextField fx:id="txtBicicleta" promptText="Valor por hora" prefWidth="150"/>
+    </HBox>
+
+    <Button text="Guardar Tarifas" onAction="#guardarTarifas" prefWidth="300" style="-fx-font-size: 15px;"/>
+
+    <Button text="Volver al Panel Admin" onAction="#volverAlAdmin" prefWidth="300"/>
+
+    <TextArea fx:id="areaResultado" prefHeight="100" editable="false"/>
+
+</VBox>

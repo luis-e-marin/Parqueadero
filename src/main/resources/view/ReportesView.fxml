@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
-<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
 
 <VBox spacing="15" alignment="CENTER" prefWidth="700" prefHeight="600"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="uniquindio.edu.co.controller.ReportesController">
 
     <Label text="REPORTES DEL PARQUEADERO"
-           style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 15;"/>
 
-    <Button text="Total de vehículos ingresados hoy" onAction="#reporteVehiculosHoy" prefWidth="380"/>
-    <Button text="Ingresos generados del día" onAction="#reporteIngresosDia" prefWidth="380"/>
-    <Button text="Tiempo promedio de permanencia" onAction="#reporteTiempoPromedio" prefWidth="380"/>
-    <Button text="Vehículos con tiempo excedido (> 4 horas)" onAction="#reporteTiempoExcedido" prefWidth="380"/>
+    <Button text="Total de vehículos ingresados hoy"
+            onAction="#reporteVehiculosHoy" prefWidth="380"/>
+    <Button text="Ingresos generados del día"
+            onAction="#reporteIngresosDia" prefWidth="380"/>
+    <Button text="Tiempo promedio de permanencia"
+            onAction="#reporteTiempoPromedio" prefWidth="380"/>
+    <Button text="Vehículos con tiempo excedido (> 4 horas)"
+            onAction="#reporteTiempoExcedido" prefWidth="380"/>
 
-    <TextArea fx:id="areaReportes" prefHeight="320" editable="false" style="-fx-font-family: monospace;"/>
+    <TextArea fx:id="areaReportes" prefHeight="320" editable="false"
+              style="-fx-font-family: monospace;"/>
 
-    <Button fx:id="btnVolver" text="← Volver al Menú Admin" onAction="#volverAlAdmin"
+    <Button fx:id="btnVolver" text="← Volver al Menú Admin"
+            onAction="#volverAlAdmin"
             style="-fx-background-color: #d32f2f; -fx-text-fill: white;"/>
 
 </VBox>

@@ -15,7 +15,7 @@ public class OperadorController {
     @FXML private ComboBox<TipoVehiculo> comboTipo;
     @FXML private TextField txtNombreConductor;
     @FXML private TextField txtIdConductor;
-    @FXML private ComboBox<TipoUsuario> comboTipoUsuario;   // ← Nuevo
+    @FXML private ComboBox<TipoUsuario> comboTipoUsuario;
     @FXML private TextField txtPlacaSalida;
     @FXML private TextArea areaResultado;
     @FXML private Button btnVolver;
@@ -23,18 +23,13 @@ public class OperadorController {
     private final Parqueadero parqueadero = Parqueadero.getInstance();
     private Cuenta cuentaActual;
 
-    @FXML
-    public void initialize() {
-        if (comboTipo != null) {
-            comboTipo.getItems().addAll(TipoVehiculo.values());
-        }
-        if (comboTipoUsuario != null) {
-            comboTipoUsuario.getItems().addAll(TipoUsuario.values());
-        }
-    }
-
     public void setCuentaActual(Cuenta cuenta) {
         this.cuentaActual = cuenta;
+    }
+    @FXML
+    public void initialize() {
+        if (comboTipo != null) comboTipo.getItems().addAll(TipoVehiculo.values());
+        if (comboTipoUsuario != null) comboTipoUsuario.getItems().addAll(TipoUsuario.values());
     }
 
     @FXML
@@ -53,17 +48,17 @@ public class OperadorController {
 
             if (placa.isEmpty() || nombre.isEmpty() || id.isEmpty() ||
                     tipoVehiculo == null || tipoUsuario == null) {
-                areaResultado.setText("Error: Complete todos los campos (incluyendo Tipo de Usuario)");
+                areaResultado.setText("Error: Complete todos los campos");
                 return;
             }
 
-            // Ahora pasamos también el TipoUsuario para aplicar descuento
+            // Llamada simple (sin cuentaActual)
             parqueadero.registrarIngreso(placa, tipoVehiculo, nombre, id, tipoUsuario);
 
             areaResultado.setText("✓ Ingreso registrado correctamente\nPlaca: " + placa.toUpperCase()
                     + "\nTipo de usuario: " + tipoUsuario);
 
-            // Limpiar campos
+            // Limpiar
             txtPlaca.clear();
             txtNombreConductor.clear();
             txtIdConductor.clear();

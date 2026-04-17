@@ -3,6 +3,7 @@ package uniquindio.edu.co.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import uniquindio.edu.co.model.Cuenta;
 import uniquindio.edu.co.model.Espacio;
 import uniquindio.edu.co.model.Parqueadero;
 import uniquindio.edu.co.model.Vehiculo;
@@ -19,6 +20,11 @@ public class EspaciosController {
     @FXML private Button btnVolver;
 
     private final Parqueadero parqueadero = Parqueadero.getInstance();
+    private Cuenta cuentaActual;   // se mantiene por consistencia con otros controladores
+
+    public void setCuentaActual(Cuenta cuenta) {
+        this.cuentaActual = cuenta;
+    }
 
     @FXML
     public void initialize() {
@@ -40,6 +46,11 @@ public class EspaciosController {
 
     @FXML
     private void deshabilitarEspacio() {
+        if (cuentaActual == null) {
+            mostrarMensaje("Error: No hay sesión activa (debe ser Admin)");
+            return;
+        }
+
         String codigo = txtCodigo.getText().trim();
         if (codigo.isEmpty()) {
             mostrarMensaje("Ingrese el código del espacio");
@@ -56,6 +67,11 @@ public class EspaciosController {
 
     @FXML
     private void habilitarEspacio() {
+        if (cuentaActual == null) {
+            mostrarMensaje("Error: No hay sesión activa (debe ser Admin)");
+            return;
+        }
+
         String codigo = txtCodigo.getText().trim();
         if (codigo.isEmpty()) {
             mostrarMensaje("Ingrese el código del espacio");
@@ -74,11 +90,11 @@ public class EspaciosController {
     @FXML
     public void volverAlMenu() {
         try {
-            Stage stage = (Stage) btnVolver.getScene().getWindow();   // usa btnVolver que tienes en FXML
-            Navegador.irA("/view/AdminView.fxml", stage);             // o /view/OperadorMenu.fxml si es para operador
+            Stage stage = (Stage) btnVolver.getScene().getWindow();
+            Navegador.irA("/view/AdminView.fxml", stage);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("No se pudo volver al menú");
+            alert.setContentText("No se pudo volver al panel de administrador");
             alert.showAndWait();
         }
     }

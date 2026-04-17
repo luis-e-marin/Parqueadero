@@ -6,7 +6,7 @@ import java.time.Duration;
 
 public class Vehiculo {
 
-    private final String placa;
+    private  String placa;
     private final TipoVehiculo tipo;
     private final String nombreConductor;
     private final String identificacionConductor;   // ← Nombre claro y consistente

@@ -9,28 +9,37 @@ public class Navegador {
 
     public static void irA(String rutaFXML, Stage stageActual) {
         try {
+            // Normalizamos la ruta
             if (!rutaFXML.startsWith("/")) {
-                rutaFXML = "/" + rutaFXML;
+                rutaFXML = "/view/" + rutaFXML;
             }
 
-            FXMLLoader loader = new FXMLLoader(Navegador.class.getResource(rutaFXML));
+            var resource = Navegador.class.getResource(rutaFXML);
+            if (resource == null) {
+                throw new RuntimeException("No se encontró el FXML: " + rutaFXML);
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
 
-            Scene scene = new Scene(root);
-            stageActual.setScene(scene);
+            stageActual.setScene(new Scene(root));
             stageActual.centerOnScreen();
-            stageActual.show();
 
         } catch (Exception e) {
-            System.err.println("Error al cargar: " + rutaFXML);
+            System.err.println("ERROR AL CARGAR: " + rutaFXML);
             e.printStackTrace();
         }
     }
 
-    /*
-    metodo volver
-     */
-    public static void volverAlAdmin(Stage stageActual) {
-        irA("/view/AdminView.fxml", stageActual);
+    public static void volverAlAdmin(Stage stage) {
+        irA("AdminView.fxml", stage);
+    }
+
+    public static void volverAlOperador(Stage stage) {
+        irA("OperadorMenu.fxml", stage);
+    }
+
+    public static void cerrarSesion(Stage stage) {
+        irA("LoginView.fxml", stage);
     }
 }
