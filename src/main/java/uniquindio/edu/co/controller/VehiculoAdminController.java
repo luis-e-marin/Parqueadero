@@ -37,7 +37,7 @@ public class VehiculoAdminController {
         List<Vehiculo> dentro = parqueadero.getVehiculosDentro();
 
         Vehiculo encontrado = dentro.stream()
-                .filter(v -> v.getPlaca().equalsIgnoreCase(placa))
+                .filter(vehiculo -> vehiculo.getPlaca().equalsIgnoreCase(placa))
                 .findFirst()
                 .orElse(null);
 
@@ -71,11 +71,11 @@ public class VehiculoAdminController {
         StringBuilder sb = new StringBuilder();
         sb.append("TODOS LOS VEHÍCULOS DENTRO\n\n");
 
-        for (Vehiculo v : lista) {
-            sb.append("Placa: ").append(v.getPlaca())
-                    .append(" | Tipo: ").append(v.getTipo())
-                    .append(" | Conductor: ").append(v.getNombreConductor())
-                    .append(" | Tiempo: ").append(v.getTiempoPermanenciaFormateado())
+        for (Vehiculo vehiculo : lista) {
+            sb.append("Placa: ").append(vehiculo.getPlaca())
+                    .append(" | Tipo: ").append(vehiculo.getTipo())
+                    .append(" | Conductor: ").append(vehiculo.getNombreConductor())
+                    .append(" | Tiempo: ").append(vehiculo.getTiempoPermanenciaFormateado())
                     .append("\n");
         }
 
@@ -111,7 +111,7 @@ public class VehiculoAdminController {
         try {
             Stage stage = (Stage) txtPlacaBuscar.getScene().getWindow();
             Navegador.volverAlAdmin(stage);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("No se pudo volver al panel de administrador");
             alert.showAndWait();

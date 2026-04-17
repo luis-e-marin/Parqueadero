@@ -35,12 +35,12 @@ public class SalidaController {
 
             double valor = parqueadero.registrarSalida(placa);
 
-            areaResultado.setText("✓ Salida registrada correctamente\nTotal a pagar: $" + String.format("%.0f", valor));
+            areaResultado.setText("Salida registrada correctamente\nTotal a pagar: " + String.format("%.0f", valor));
 
             txtPlacaSalida.clear();
 
-        } catch (Exception e) {
-            areaResultado.setText("Error: " + e.getMessage());
+        } catch (Exception exception) {
+            areaResultado.setText("Error: " + exception.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class SalidaController {
     public void volverAlMenu() {
         try {
             Stage stage = (Stage) txtPlacaSalida.getScene().getWindow();
-            Navegador.volverAlOperador(stage);   // o volverAlMenuOperador si usas otro nombre
+            Navegador.volverAlOperador(stage);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("No se pudo volver al menú del operador");

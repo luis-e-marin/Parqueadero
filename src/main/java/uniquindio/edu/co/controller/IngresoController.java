@@ -55,7 +55,7 @@ public class IngresoController {
 
             parqueadero.registrarIngreso(placa, tipoVehiculo, nombre, id, tipoUsuario);
 
-            areaResultado.setText("✓ Ingreso registrado correctamente\nPlaca: " + placa);
+            areaResultado.setText(" Ingreso registrado correctamente\nPlaca: " + placa);
 
             // Limpiar campos
             txtPlaca.clear();

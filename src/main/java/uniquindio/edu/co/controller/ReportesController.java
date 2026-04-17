@@ -2,7 +2,6 @@ package uniquindio.edu.co.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import uniquindio.edu.co.model.Parqueadero;
@@ -14,7 +13,6 @@ import java.util.List;
 public class ReportesController {
 
     @FXML private TextArea areaReportes;
-    @FXML private Button btnVolver;
 
     private final Parqueadero parqueadero = Parqueadero.getInstance();
 
@@ -26,9 +24,9 @@ public class ReportesController {
         sb.append("Total de vehículos actualmente en el parqueadero: ").append(total).append("\n\n");
 
         List<Vehiculo> dentro = parqueadero.getVehiculosDentro();
-        for (Vehiculo v : dentro) {
-            sb.append(v.getPlaca()).append(" - ").append(v.getTipo())
-                    .append(" - ").append(v.getTiempoPermanenciaFormateado()).append("\n");
+        for (Vehiculo vehiculo : dentro) {
+            sb.append(vehiculo.getPlaca()).append(" - ").append(vehiculo.getTipo())
+                    .append(" - ").append(vehiculo.getTiempoPermanenciaFormateado()).append("\n");
         }
 
         if (dentro.isEmpty()) {
@@ -46,9 +44,9 @@ public class ReportesController {
         sb.append("=== INGRESOS GENERADOS DEL DÍA ===\n\n");
         sb.append("Vehículos actualmente parqueados: ").append(dentro.size()).append("\n\n");
 
-        for (Vehiculo v : dentro) {
+        for (Vehiculo vehiculo : dentro) {
             ingresosEstimados += 5000;
-            sb.append(v.getPlaca()).append(" → $").append(String.format("%.0f", 5000.0)).append("\n");
+            sb.append(vehiculo.getPlaca()).append(" → $").append(String.format("%.0f", 5000.0)).append("\n");
         }
 
         sb.append("\nIngresos estimados del día: $").append(String.format("%.0f", ingresosEstimados));
@@ -64,8 +62,8 @@ public class ReportesController {
         }
 
         long totalMinutos = 0;
-        for (Vehiculo v : dentro) {
-            totalMinutos += v.getMinutosPermanencia();
+        for (Vehiculo vehiculo : dentro) {
+            totalMinutos += vehiculo.getMinutosPermanencia();
         }
 
         double promedio = (double) totalMinutos / dentro.size();
@@ -86,10 +84,10 @@ public class ReportesController {
         sb.append("=== VEHÍCULOS CON TIEMPO EXCEDIDO (> 4 horas) ===\n\n");
 
         boolean hayExcedidos = false;
-        for (Vehiculo v : dentro) {
-            if (v.getMinutosPermanencia() > 240) {
-                sb.append(v.getPlaca()).append(" - ").append(v.getTipo())
-                        .append(" → ").append(v.getTiempoPermanenciaFormateado()).append("\n");
+        for (Vehiculo vehiculo : dentro) {
+            if (vehiculo.getMinutosPermanencia() > 240) {
+                sb.append(vehiculo.getPlaca()).append(" - ").append(vehiculo.getTipo())
+                        .append(" → ").append(vehiculo.getTiempoPermanenciaFormateado()).append("\n");
                 hayExcedidos = true;
             }
         }

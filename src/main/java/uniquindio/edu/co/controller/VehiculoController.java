@@ -16,9 +16,14 @@ public class VehiculoController {
     @FXML private TextField txtPlaca;
     @FXML private ComboBox<TipoVehiculo> comboTipo;
     @FXML private TextArea areaResultado;
-    @FXML private Button btnVolver;
 
     private final Parqueadero parqueadero = Parqueadero.getInstance();
+
+    private Cuenta cuentaActual;
+
+    public void setCuentaActual(Cuenta cuenta) {
+        this.cuentaActual = cuenta;
+    }
 
     @FXML
     public void initialize() {
@@ -46,10 +51,10 @@ public class VehiculoController {
             Vehiculo vehiculo = new Vehiculo(placa, tipo, usuario.getNombre(), idUsuario);
             usuario.agregarVehiculo(vehiculo);
 
-            areaResultado.setText("✓ Vehículo agregado correctamente a " + usuario.getNombre());
+            areaResultado.setText("Vehículo agregado correctamente a " + usuario.getNombre());
 
-        } catch (Exception e) {
-            areaResultado.setText("Error: " + e.getMessage());
+        } catch (Exception exception) {
+            areaResultado.setText("Error: " + exception.getMessage());
         }
     }
 
@@ -61,8 +66,8 @@ public class VehiculoController {
             return;
         }
 
-        Usuario u = parqueadero.buscarUsuarioPorPlaca(placa);
-        areaResultado.setText(u != null ? "Pertenece a: " + u.getNombre() : "No encontrado");
+        Usuario usuario = parqueadero.buscarUsuarioPorPlaca(placa);
+        areaResultado.setText(usuario != null ? "Pertenece a: " + usuario.getNombre() : "No encontrado");
     }
 
     @FXML
@@ -70,14 +75,14 @@ public class VehiculoController {
         String idUsuario = txtIdUsuario.getText().trim();
         String placa = txtPlaca.getText().trim();
 
-        Usuario u = parqueadero.buscarUsuarioPorIdentificacion(idUsuario);
-        if (u == null) {
+        Usuario usuario = parqueadero.buscarUsuarioPorIdentificacion(idUsuario);
+        if (usuario == null) {
             areaResultado.setText("Usuario no encontrado");
             return;
         }
 
-        u.eliminarVehiculo(placa);
-        areaResultado.setText("✓ Vehículo eliminado correctamente");
+        usuario.eliminarVehiculo(placa);
+        areaResultado.setText(" Vehículo eliminado correctamente");
     }
 
     @FXML
@@ -86,8 +91,8 @@ public class VehiculoController {
 
             Stage stage = (Stage) areaResultado.getScene().getWindow();
             Navegador.volverAlAdmin(stage);
-        } catch (Exception e) {
-            System.err.println("Error al volver al Admin: " + e.getMessage());
+        } catch (Exception exception) {
+            System.err.println("Error al volver al Admin: " + exception.getMessage());
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error de navegación");
@@ -96,9 +101,4 @@ public class VehiculoController {
         }
     }
 
-    private Cuenta cuentaActual;
-
-    public void setCuentaActual(Cuenta cuenta) {
-        this.cuentaActual = cuenta;
-    }
 }

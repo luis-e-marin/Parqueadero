@@ -37,7 +37,7 @@ public class LoginController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AdminView.fxml"));
                 Parent root = loader.load();
                 AdminController adminCtrl = loader.getController();
-                adminCtrl.setCuentaActual(cuenta);   // ← importante
+                adminCtrl.setCuentaActual(cuenta);
                 stage.setScene(new Scene(root));
             } else {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/OperadorMenu.fxml"));

@@ -14,7 +14,7 @@ import uniquindio.edu.co.utils.Navegador;
 
 public class OperadorMenuController {
 
-    private static Cuenta cuentaActualEstatica;   // ← Solución para que no se pierda al volver
+    private static Cuenta cuentaActualEstatica;
 
     private final Parqueadero parqueadero = Parqueadero.getInstance();
 

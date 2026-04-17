@@ -52,13 +52,12 @@ public class OperadorController {
                 return;
             }
 
-            // Llamada simple (sin cuentaActual)
+
             parqueadero.registrarIngreso(placa, tipoVehiculo, nombre, id, tipoUsuario);
 
-            areaResultado.setText("✓ Ingreso registrado correctamente\nPlaca: " + placa.toUpperCase()
+            areaResultado.setText(" Ingreso registrado correctamente\nPlaca: " + placa.toUpperCase()
                     + "\nTipo de usuario: " + tipoUsuario);
 
-            // Limpiar
             txtPlaca.clear();
             txtNombreConductor.clear();
             txtIdConductor.clear();
@@ -86,7 +85,7 @@ public class OperadorController {
 
             double valor = parqueadero.registrarSalida(placa);
 
-            areaResultado.setText("✓ Salida registrada correctamente\nTotal a pagar: $" + String.format("%.0f", valor));
+            areaResultado.setText(" Salida registrada correctamente\nTotal a pagar: $" + String.format("%.0f", valor));
 
             txtPlacaSalida.clear();
 

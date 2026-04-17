@@ -52,13 +52,11 @@ public class ParqueaderoController {
                 return;
             }
 
-            // Llamada simple (sin cuentaActual)
             parqueadero.registrarIngreso(placa, tipoVehiculo, nombre, id, tipoUsuario);
 
-            areaResultado.setText("✓ Ingreso registrado correctamente\nPlaca: " + placa.toUpperCase()
+            areaResultado.setText(" Ingreso registrado correctamente\nPlaca: " + placa.toUpperCase()
                     + "\nTipo de usuario: " + tipoUsuario);
 
-            // Limpiar
             txtPlaca.clear();
             txtNombreConductor.clear();
             txtIdConductor.clear();
@@ -86,7 +84,7 @@ public class ParqueaderoController {
 
             double valor = parqueadero.registrarSalida(placa);
 
-            areaResultado.setText("✓ Salida registrada correctamente\nTotal a pagar: $" + String.format("%.0f", valor));
+            areaResultado.setText("Salida registrada correctamente\nTotal a pagar: " + String.format("%.0f", valor));
 
             txtPlacaSalida.clear();
 
@@ -99,7 +97,7 @@ public class ParqueaderoController {
     public void volverAlAdmin() {
         try {
             Stage stage = (Stage) btnVolver.getScene().getWindow();
-            Navegador.irA("/view/AdminView.fxml", stage);   // Cambiado a irA
+            Navegador.irA("/view/AdminView.fxml", stage);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("No se pudo volver al menú principal");

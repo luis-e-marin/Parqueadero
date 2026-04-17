@@ -51,13 +51,13 @@ public class UsuarioController {
 
             parqueadero.registrarUsuarioAutorizado(nombre, id, tipo);
 
-            areaResultado.setText("✓ Usuario registrado correctamente:\n" +
+            areaResultado.setText(" Usuario registrado correctamente:\n" +
                     "Nombre: " + nombre + "\nID: " + id + "\nTipo: " + tipo);
 
             limpiarCampos();
 
-        } catch (Exception e) {
-            areaResultado.setText("Error: " + e.getMessage());
+        } catch (Exception exception) {
+            areaResultado.setText("Error: " + exception.getMessage());
         }
     }
 
@@ -99,13 +99,13 @@ public class UsuarioController {
 
             usuarioActual.modificar(nuevoNombre, nuevoTipo);
 
-            areaResultado.setText("✓ Usuario modificado correctamente:\n" + usuarioActual.toString());
+            areaResultado.setText(" Usuario modificado correctamente:\n" + usuarioActual.toString());
 
             limpiarCampos();
             usuarioActual = null;
 
-        } catch (Exception e) {
-            areaResultado.setText("Error al modificar: " + e.getMessage());
+        } catch (Exception exception) {
+            areaResultado.setText("Error al modificar: " + exception.getMessage());
         }
     }
 
@@ -120,7 +120,7 @@ public class UsuarioController {
         try {
             Stage stage = (Stage) root.getScene().getWindow();
             Navegador.volverAlAdmin(stage);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("No se pudo volver al panel de administrador");
             alert.showAndWait();

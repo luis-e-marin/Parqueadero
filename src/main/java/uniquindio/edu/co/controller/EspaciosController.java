@@ -20,7 +20,7 @@ public class EspaciosController {
     @FXML private Button btnVolver;
 
     private final Parqueadero parqueadero = Parqueadero.getInstance();
-    private Cuenta cuentaActual;   // se mantiene por consistencia con otros controladores
+    private Cuenta cuentaActual;
 
     public void setCuentaActual(Cuenta cuenta) {
         this.cuentaActual = cuenta;

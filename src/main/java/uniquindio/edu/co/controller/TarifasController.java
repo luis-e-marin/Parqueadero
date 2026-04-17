@@ -44,15 +44,15 @@ public class TarifasController {
             parqueadero.actualizarTarifa(TipoVehiculo.CARRO, valorCarro);
             parqueadero.actualizarTarifa(TipoVehiculo.MOTO, valorMoto);
             parqueadero.actualizarTarifa(TipoVehiculo.BICICLETA, valorBicicleta);
-            areaResultado.setText("✓ Tarifas actualizadas correctamente:\n" +
-                    "Carro: $" + valorCarro + "/hora\n" +
-                    "Moto: $" + valorMoto + "/hora\n" +
-                    "Bicicleta: $" + valorBicicleta + "/hora");
+            areaResultado.setText(" Tarifas actualizadas correctamente:\n" +
+                    "Carro: " + valorCarro + "/hora\n" +
+                    "Moto: " + valorMoto + "/hora\n" +
+                    "Bicicleta: " + valorBicicleta + "/hora");
 
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException numberFormatException) {
             areaResultado.setText("Error: Ingrese solo números válidos");
-        } catch (Exception e) {
-            areaResultado.setText("Error: " + e.getMessage());
+        } catch (Exception exception) {
+            areaResultado.setText("Error: " + exception.getMessage());
         }
     }
 
