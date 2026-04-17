@@ -54,6 +54,6 @@ public class Tarifa {
 
     @Override
     public String toString() {
-        return tipoVehiculo + " → $" + valorPorHora + "/hora";
+        return tipoVehiculo + " -> $" + valorPorHora + "/hora";
     }
 }

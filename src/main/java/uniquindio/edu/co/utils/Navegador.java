@@ -9,7 +9,6 @@ public class Navegador {
 
     public static void irA(String rutaFXML, Stage stageActual) {
         try {
-            // Normalizamos la ruta
             if (!rutaFXML.startsWith("/")) {
                 rutaFXML = "/view/" + rutaFXML;
             }
@@ -25,9 +24,9 @@ public class Navegador {
             stageActual.setScene(new Scene(root));
             stageActual.centerOnScreen();
 
-        } catch (Exception e) {
+        } catch (Exception exception) {
             System.err.println("ERROR AL CARGAR: " + rutaFXML);
-            e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 

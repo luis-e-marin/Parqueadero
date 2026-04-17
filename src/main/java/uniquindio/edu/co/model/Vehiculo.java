@@ -9,13 +9,13 @@ public class Vehiculo {
     private  String placa;
     private final TipoVehiculo tipo;
     private final String nombreConductor;
-    private final String identificacionConductor;   // ← Nombre claro y consistente
+    private final String identificacionConductor;
     private String espacioAsignado;
     private LocalDateTime horaIngreso;
     private LocalDateTime horaSalida;
     private boolean estaDentro;
 
-    // Constructor correcto con 4 parámetros
+    // Constructor
     public Vehiculo(String placa, TipoVehiculo tipo, String nombreConductor, String identificacionConductor) {
 
         if (placa == null || placa.trim().isEmpty()) {
@@ -64,7 +64,7 @@ public class Vehiculo {
         long minutos = getMinutosPermanencia();
         long horas = minutos / 60;
         long mins = minutos % 60;
-        return (horas > 0 ? horas + "h " : "") + mins + "m";
+        return (horas > 0 ? horas + "horas " : "") + mins + "minutos";
     }
 
     // Getters

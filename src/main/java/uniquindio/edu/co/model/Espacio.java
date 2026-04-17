@@ -110,7 +110,7 @@ public class Espacio {
         sb.append(codigo).append(" - ").append(tipo).append(" (").append(estado).append(")");
 
         if (vehiculoAsignado != null) {
-            sb.append(" → ").append(vehiculoAsignado.getPlaca());
+            sb.append(" ---> ").append(vehiculoAsignado.getPlaca());
         }
         return sb.toString();
     }

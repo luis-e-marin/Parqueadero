@@ -25,7 +25,7 @@ public class Usuario {
 
         this.nombre = nombre.trim();
         this.identificacion = identificacion.trim().toUpperCase();
-        this.tipoUsuario = tipoUsuario;        // ← Aseguramos que se guarde
+        this.tipoUsuario = tipoUsuario;
         this.vehiculos = new ArrayList<>();
     }
 
@@ -53,12 +53,12 @@ public class Usuario {
     }
 
     public void eliminarVehiculo(String placa) {
-        vehiculos.removeIf(v -> v.getPlaca().equalsIgnoreCase(placa));
+        vehiculos.removeIf(vehiculo -> vehiculo.getPlaca().equalsIgnoreCase(placa));
     }
 
     public Vehiculo buscarVehiculo(String placa) {
         return vehiculos.stream()
-                .filter(v -> v.getPlaca().equalsIgnoreCase(placa))
+                .filter(vehiculo -> vehiculo.getPlaca().equalsIgnoreCase(placa))
                 .findFirst()
                 .orElse(null);
     }
@@ -81,7 +81,7 @@ public class Usuario {
     }
 
     public List<Vehiculo> getVehiculos() {
-        return new ArrayList<>(vehiculos); // copia para seguridad
+        return new ArrayList<>(vehiculos);
     }
 
     public void setTipoUsuario(TipoUsuario tipoUsuario) {
