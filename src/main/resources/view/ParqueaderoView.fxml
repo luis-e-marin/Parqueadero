@@ -14,7 +14,6 @@
     <Label text="CONTROL DE PARQUEADERO - OPERADOR"
            style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
-    <!-- Ingreso de vehículo -->
     <Label text="Registrar Ingreso de Vehículo" style="-fx-font-weight: bold;"/>
 
     <HBox spacing="10" alignment="CENTER">
@@ -29,7 +28,6 @@
 
     <Button text="Registrar Ingreso" onAction="#registrarIngreso" prefWidth="250" style="-fx-background-color: #4caf50; -fx-text-fill: white;"/>
 
-    <!-- Salida de vehículo -->
     <Label text="Registrar Salida de Vehículo" style="-fx-font-weight: bold; margin-top: 20;"/>
 
     <HBox spacing="10" alignment="CENTER">
