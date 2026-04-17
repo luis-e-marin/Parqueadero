@@ -15,7 +15,6 @@ public enum Rol {
         return nombre;
     }
 
-    // Métodos útiles
     public boolean esAdministrador() {
         return this == ADMINISTRADOR;
     }
