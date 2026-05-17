@@ -15,7 +15,7 @@ public class GestorUsuarios {
         usuarios.add(usuario);
     }
 
-    public Usuario buscarPorId(String id) {
+    public Usuario buscarUsuarioPorId(String id) {
         return usuarios.stream()
                 .filter(usuario -> usuario.getIdentificacion().equalsIgnoreCase(id))
                 .findFirst()

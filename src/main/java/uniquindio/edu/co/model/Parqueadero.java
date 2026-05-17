@@ -310,4 +310,16 @@ public class Parqueadero {
         return sb.toString();
     }
 
+    @Override
+    public String toString() {
+        return "Parqueadero{" +
+                "espacios=" + espacios +
+                ", vehiculosDentro=" + vehiculosDentro +
+                ", cuentas=" + cuentas +
+                ", usuariosRegistrados=" + usuariosRegistrados +
+                ", tarifaCarro=" + tarifaCarro +
+                ", tarifaMoto=" + tarifaMoto +
+                ", tarifaBicicleta=" + tarifaBicicleta +
+                '}';
+    }
 }

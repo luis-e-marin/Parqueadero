@@ -95,4 +95,6 @@ public class Usuario {
         return nombre + " (" + identificacion + ") - " + tipoUsuario +
                 " | Vehículos: " + vehiculos.size();
     }
+
+
 }

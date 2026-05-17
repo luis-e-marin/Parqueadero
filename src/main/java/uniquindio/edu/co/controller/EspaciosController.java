@@ -33,8 +33,8 @@ public class EspaciosController {
         colEstado.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getEstado().toString()));
 
         colVehiculo.setCellValueFactory(data -> {
-            Vehiculo v = data.getValue().getVehiculoAsignado();
-            return new javafx.beans.property.SimpleStringProperty(v != null ? v.getPlaca() : "Libre");
+            Vehiculo vehiculo = data.getValue().getVehiculoAsignado();
+            return new javafx.beans.property.SimpleStringProperty(vehiculo != null ? vehiculo.getPlaca() : "Libre");
         });
 
         actualizarTabla();
@@ -82,8 +82,8 @@ public class EspaciosController {
             parqueadero.habilitarEspacio(codigo);
             actualizarTabla();
             mostrarMensaje("Espacio habilitado correctamente");
-        } catch (Exception e) {
-            mostrarMensaje("Error: " + e.getMessage());
+        } catch (Exception exception) {
+            mostrarMensaje("Error: " + exception.getMessage());
         }
     }
 
@@ -92,7 +92,7 @@ public class EspaciosController {
         try {
             Stage stage = (Stage) btnVolver.getScene().getWindow();
             Navegador.irA("/view/AdminView.fxml", stage);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("No se pudo volver al panel de administrador");
             alert.showAndWait();

@@ -56,4 +56,6 @@ public class Tarifa {
     public String toString() {
         return tipoVehiculo + " -> $" + valorPorHora + "/hora";
     }
+
+
 }

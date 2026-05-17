@@ -64,8 +64,8 @@ public class IngresoController {
             comboTipoVehiculo.setValue(null);
             comboTipoUsuario.setValue(null);
 
-        } catch (Exception e) {
-            areaResultado.setText("Error: " + e.getMessage());
+        } catch (Exception exception) {
+            areaResultado.setText("Error: " + exception.getMessage());
         }
     }
 
@@ -74,7 +74,7 @@ public class IngresoController {
         try {
             Stage stage = (Stage) root.getScene().getWindow();
             Navegador.volverAlOperador(stage);
-        } catch (Exception e) {
+        } catch (Exception exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("No se pudo volver al menú del operador");
             alert.showAndWait();
