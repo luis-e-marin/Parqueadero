@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <VBox fx:id="root" spacing="15" alignment="CENTER" prefWidth="500" prefHeight="400"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="uniquindio.edu.co.controller.SalidaController">
+      fx:controller="uniquindio.edu.co.viewController.SalidaViewController">
 
     <Label text="REGISTRAR SALIDA" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 

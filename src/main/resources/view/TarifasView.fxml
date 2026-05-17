@@ -8,7 +8,7 @@
 <?import javafx.scene.control.Button?>
 <VBox fx:id="root" alignment="CENTER" prefWidth="520" prefHeight="480"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="uniquindio.edu.co.controller.TarifasController">
+      fx:controller="uniquindio.edu.co.viewController.TarifasViewController">
 
     <Label text="GESTIÓN DE TARIFAS"
            style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-padding: 15;"/>

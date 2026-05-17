@@ -40,7 +40,7 @@ MainApp extends Application {
                     javafx.scene.control.Alert.AlertType.ERROR);
             alert.setTitle("Error de Inicio");
             alert.setHeaderText("No se pudo iniciar PARKUQ");
-            alert.setContentText("Error al cargar la pantalla de login.\n\n" + exception.getMessage());
+            alert.setContentText("Error al cargar la pantalla de login.\n\n" + exception.getCause());
             alert.showAndWait();
         }
     }

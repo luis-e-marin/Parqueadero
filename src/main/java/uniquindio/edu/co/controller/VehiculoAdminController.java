@@ -1,9 +1,6 @@
 package uniquindio.edu.co.controller;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import uniquindio.edu.co.model.Cuenta;
 import uniquindio.edu.co.model.Parqueadero;
@@ -14,90 +11,47 @@ import java.util.List;
 
 public class VehiculoAdminController {
 
-    @FXML private TextField txtPlacaBuscar;
-    @FXML private TextArea areaResultado;
-
     private final Parqueadero parqueadero = Parqueadero.getInstance();
-
     private Cuenta cuentaActual;
 
     public void setCuentaActual(Cuenta cuenta) {
         this.cuentaActual = cuenta;
     }
 
-    @FXML
-    public void buscarVehiculo() {
+    public void buscarVehiculo(TextField txtPlacaBuscar, TextArea areaResultado) {
         String placa = txtPlacaBuscar.getText().trim();
-
-        if (placa.isEmpty()) {
-            areaResultado.setText("Ingrese una placa para buscar");
-            return;
-        }
-
-        List<Vehiculo> dentro = parqueadero.getVehiculosDentro();
-
-        Vehiculo encontrado = dentro.stream()
-                .filter(vehiculo -> vehiculo.getPlaca().equalsIgnoreCase(placa))
-                .findFirst()
-                .orElse(null);
-
+        if (placa.isEmpty()) { areaResultado.setText("Ingrese una placa para buscar"); return; }
+        Vehiculo encontrado = parqueadero.getVehiculosDentro().stream()
+                .filter(v -> v.getPlaca().equalsIgnoreCase(placa)).findFirst().orElse(null);
         if (encontrado != null) {
-            areaResultado.setText(
-                    "Vehículo encontrado dentro del parqueadero:\n\n" +
-                            "Placa: " + encontrado.getPlaca() + "\n" +
-                            "Tipo: " + encontrado.getTipo() + "\n" +
-                            "Conductor: " + encontrado.getNombreConductor() + "\n" +
-                            "ID: " + encontrado.getIdentificacionConductor() + "\n" +
-                            "Espacio: " + encontrado.getEspacioAsignado() + "\n" +
-                            "Tiempo: " + encontrado.getTiempoPermanenciaFormateado()
-            );
+            areaResultado.setText("Vehículo encontrado dentro del parqueadero:\n\n" +
+                    "Placa: " + encontrado.getPlaca() + "\nTipo: " + encontrado.getTipo() +
+                    "\nConductor: " + encontrado.getNombreConductor() +
+                    "\nID: " + encontrado.getIdentificacionConductor() +
+                    "\nEspacio: " + encontrado.getEspacioAsignado() +
+                    "\nTiempo: " + encontrado.getTiempoPermanenciaFormateado());
         } else {
-            areaResultado.setText(
-                    "No se encontró vehículo con placa: " + placa.toUpperCase() +
-                            "\n(Puede que ya haya salido o no esté registrado)"
-            );
+            areaResultado.setText("No se encontró vehículo con placa: " + placa.toUpperCase() +
+                    "\n(Puede que ya haya salido o no esté registrado)");
         }
     }
 
-    @FXML
-    public void verTodosVehiculos() {
+    public void verTodosVehiculos(TextArea areaResultado) {
         List<Vehiculo> lista = parqueadero.getVehiculosDentro();
-
-        if (lista.isEmpty()) {
-            areaResultado.setText("No hay vehículos dentro del parqueadero en este momento.");
-            return;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("TODOS LOS VEHÍCULOS DENTRO\n\n");
-
-        for (Vehiculo vehiculo : lista) {
-            sb.append("Placa: ").append(vehiculo.getPlaca())
-                    .append(" | Tipo: ").append(vehiculo.getTipo())
-                    .append(" | Conductor: ").append(vehiculo.getNombreConductor())
-                    .append(" | Tiempo: ").append(vehiculo.getTiempoPermanenciaFormateado())
-                    .append("\n");
-        }
-
+        if (lista.isEmpty()) { areaResultado.setText("No hay vehículos dentro del parqueadero en este momento."); return; }
+        StringBuilder sb = new StringBuilder("TODOS LOS VEHÍCULOS DENTRO\n\n");
+        for (Vehiculo v : lista)
+            sb.append("Placa: ").append(v.getPlaca()).append(" | Tipo: ").append(v.getTipo())
+                    .append(" | Conductor: ").append(v.getNombreConductor())
+                    .append(" | Tiempo: ").append(v.getTiempoPermanenciaFormateado()).append("\n");
         areaResultado.setText(sb.toString());
     }
 
-    @FXML
-    public void eliminarVehiculo() {
+    public void eliminarVehiculo(TextField txtPlacaBuscar, TextArea areaResultado) {
         String placa = txtPlacaBuscar.getText().trim();
-
-        if (placa.isEmpty()) {
-            areaResultado.setText("Ingrese una placa para eliminar");
-            return;
-        }
-
+        if (placa.isEmpty()) { areaResultado.setText("Ingrese una placa para eliminar"); return; }
         List<Vehiculo> lista = parqueadero.getVehiculosDentro();
-
-        Vehiculo encontrado = lista.stream()
-                .filter(v -> v.getPlaca().equalsIgnoreCase(placa))
-                .findFirst()
-                .orElse(null);
-
+        Vehiculo encontrado = lista.stream().filter(v -> v.getPlaca().equalsIgnoreCase(placa)).findFirst().orElse(null);
         if (encontrado != null) {
             lista.remove(encontrado);
             areaResultado.setText("✓ Vehículo eliminado: " + placa.toUpperCase());
@@ -106,15 +60,12 @@ public class VehiculoAdminController {
         }
     }
 
-    @FXML
-    public void volverAlAdmin() {
+    public void volverAlAdmin(TextField txtPlacaBuscar) {
         try {
             Stage stage = (Stage) txtPlacaBuscar.getScene().getWindow();
             Navegador.volverAlAdmin(stage);
-        } catch (Exception exception) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("No se pudo volver al panel de administrador");
-            alert.showAndWait();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "No se pudo volver al panel de administrador").showAndWait();
         }
     }
 }

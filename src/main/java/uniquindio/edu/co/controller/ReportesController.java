@@ -1,6 +1,5 @@
 package uniquindio.edu.co.controller;
 
-import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
@@ -12,102 +11,64 @@ import java.util.List;
 
 public class ReportesController {
 
-    @FXML private TextArea areaReportes;
-
     private final Parqueadero parqueadero = Parqueadero.getInstance();
 
-    @FXML
-    public void reporteVehiculosHoy() {
-        int total = parqueadero.getVehiculosDentro().size();
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== VEHÍCULOS INGRESADOS HOY ===\n\n");
-        sb.append("Total de vehículos actualmente en el parqueadero: ").append(total).append("\n\n");
-
+    public void reporteVehiculosHoy(TextArea areaReportes) {
         List<Vehiculo> dentro = parqueadero.getVehiculosDentro();
-        for (Vehiculo vehiculo : dentro) {
-            sb.append(vehiculo.getPlaca()).append(" - ").append(vehiculo.getTipo())
-                    .append(" - ").append(vehiculo.getTiempoPermanenciaFormateado()).append("\n");
-        }
-
-        if (dentro.isEmpty()) {
-            sb.append("No hay vehículos en el parqueadero en este momento.");
-        }
+        StringBuilder sb = new StringBuilder("=== VEHÍCULOS INGRESADOS HOY ===\n\n");
+        sb.append("Total: ").append(dentro.size()).append("\n\n");
+        for (Vehiculo v : dentro)
+            sb.append(v.getPlaca()).append(" - ").append(v.getTipo()).append(" - ").append(v.getTiempoPermanenciaFormateado()).append("\n");
+        if (dentro.isEmpty()) sb.append("No hay vehículos en el parqueadero en este momento.");
         areaReportes.setText(sb.toString());
     }
 
-    @FXML
-    public void reporteIngresosDia() {
+    public void reporteIngresosDia(TextArea areaReportes) {
         List<Vehiculo> dentro = parqueadero.getVehiculosDentro();
         double ingresosEstimados = 0;
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== INGRESOS GENERADOS DEL DÍA ===\n\n");
+        StringBuilder sb = new StringBuilder("=== INGRESOS GENERADOS DEL DÍA ===\n\n");
         sb.append("Vehículos actualmente parqueados: ").append(dentro.size()).append("\n\n");
-
-        for (Vehiculo vehiculo : dentro) {
+        for (Vehiculo v : dentro) {
             ingresosEstimados += 5000;
-            sb.append(vehiculo.getPlaca()).append(" → $").append(String.format("%.0f", 5000.0)).append("\n");
+            sb.append(v.getPlaca()).append(" → $5000\n");
         }
-
-        sb.append("\nIngresos estimados del día: $").append(String.format("%.0f", ingresosEstimados));
+        sb.append("\nIngresos estimados: $").append(String.format("%.0f", ingresosEstimados));
         areaReportes.setText(sb.toString());
     }
 
-    @FXML
-    public void reporteTiempoPromedio() {
+    public void reporteTiempoPromedio(TextArea areaReportes) {
         List<Vehiculo> dentro = parqueadero.getVehiculosDentro();
-        if (dentro.isEmpty()) {
-            areaReportes.setText("No hay vehículos para calcular tiempo promedio.");
-            return;
-        }
-
+        if (dentro.isEmpty()) { areaReportes.setText("No hay vehículos para calcular tiempo promedio."); return; }
         long totalMinutos = 0;
-        for (Vehiculo vehiculo : dentro) {
-            totalMinutos += vehiculo.getMinutosPermanencia();
-        }
-
+        for (Vehiculo v : dentro) totalMinutos += v.getMinutosPermanencia();
         double promedio = (double) totalMinutos / dentro.size();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== TIEMPO PROMEDIO DE PERMANENCIA ===\n\n");
+        StringBuilder sb = new StringBuilder("=== TIEMPO PROMEDIO DE PERMANENCIA ===\n\n");
         sb.append("Total vehículos: ").append(dentro.size()).append("\n");
         sb.append("Tiempo promedio: ").append(String.format("%.1f", promedio)).append(" minutos\n");
-        sb.append("Equivalente a: ").append(String.format("%.1f", promedio/60)).append(" horas");
-
+        sb.append("Equivalente a: ").append(String.format("%.1f", promedio / 60)).append(" horas");
         areaReportes.setText(sb.toString());
     }
 
-    @FXML
-    public void reporteTiempoExcedido() {
+    public void reporteTiempoExcedido(TextArea areaReportes) {
         List<Vehiculo> dentro = parqueadero.getVehiculosDentro();
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== VEHÍCULOS CON TIEMPO EXCEDIDO (> 4 horas) ===\n\n");
-
+        StringBuilder sb = new StringBuilder("=== VEHÍCULOS CON TIEMPO EXCEDIDO (> 4 horas) ===\n\n");
         boolean hayExcedidos = false;
-        for (Vehiculo vehiculo : dentro) {
-            if (vehiculo.getMinutosPermanencia() > 240) {
-                sb.append(vehiculo.getPlaca()).append(" - ").append(vehiculo.getTipo())
-                        .append(" → ").append(vehiculo.getTiempoPermanenciaFormateado()).append("\n");
+        for (Vehiculo v : dentro) {
+            if (v.getMinutosPermanencia() > 240) {
+                sb.append(v.getPlaca()).append(" - ").append(v.getTipo()).append(" → ").append(v.getTiempoPermanenciaFormateado()).append("\n");
                 hayExcedidos = true;
             }
         }
-
-        if (!hayExcedidos) {
-            sb.append("No hay vehículos que hayan superado las 4 horas.");
-        }
+        if (!hayExcedidos) sb.append("No hay vehículos que hayan superado las 4 horas.");
         areaReportes.setText(sb.toString());
     }
 
-    @FXML
-    public void volverAlAdmin() {
+    public void volverAlAdmin(TextArea areaReportes) {
         try {
-
             Stage stage = (Stage) areaReportes.getScene().getWindow();
             Navegador.volverAlAdmin(stage);
-
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
             alert.setContentText("No se pudo volver al menú principal");
             alert.showAndWait();
         }

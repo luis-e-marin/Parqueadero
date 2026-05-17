@@ -7,7 +7,7 @@
 
 <VBox spacing="15" alignment="CENTER" prefWidth="700" prefHeight="600"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="uniquindio.edu.co.controller.ReportesController">
+      fx:controller="uniquindio.edu.co.viewController.ReportesViewController">
 
     <Label text="REPORTES DEL PARQUEADERO"
            style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 15;"/>

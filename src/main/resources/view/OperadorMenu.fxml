@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Label?>
 <VBox fx:id="root" spacing="18" alignment="CENTER" prefWidth="520" prefHeight="520"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="uniquindio.edu.co.controller.OperadorMenuController">
+      fx:controller="uniquindio.edu.co.viewController.OperadorMenuViewController">
 
     <Label text="MENÚ OPERADOR - PARKUQ"
            style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-padding: 15;"/>

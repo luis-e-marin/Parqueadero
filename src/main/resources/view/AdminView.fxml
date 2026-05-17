@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Label?>
 <VBox spacing="18" alignment="CENTER" prefWidth="560" prefHeight="560"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="uniquindio.edu.co.controller.AdminController">
+      fx:controller="uniquindio.edu.co.viewController.AdminViewController">
 
     <Label text="PANEL DE ADMINISTRADOR"
            style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-padding: 25;"/>

@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TextArea?>
 <VBox fx:id="root" spacing="15" alignment="CENTER" prefWidth="520" prefHeight="500"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="uniquindio.edu.co.controller.IngresoController">
+      fx:controller="uniquindio.edu.co.viewController.IngresoViewController">
 
     <Label text="REGISTRAR INGRESO" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 

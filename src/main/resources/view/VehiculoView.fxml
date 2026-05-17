@@ -9,7 +9,7 @@
 <?import javafx.scene.control.Button?>
 <VBox spacing="12" alignment="CENTER" prefWidth="550" prefHeight="550"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="uniquindio.edu.co.controller.VehiculoController">
+      fx:controller="uniquindio.edu.co.viewController.vehiculosViewController">
 
     <Label text="GESTIÓN DE VEHÍCULOS" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 

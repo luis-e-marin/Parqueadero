@@ -6,6 +6,7 @@ module uniquindio.edu.co.parqueadero {
     exports uniquindio.edu.co.app;
 
     opens uniquindio.edu.co.controller to javafx.fxml;
+    opens uniquindio.edu.co.viewController to javafx.fxml;
 
     opens uniquindio.edu.co.app to javafx.graphics;
 }

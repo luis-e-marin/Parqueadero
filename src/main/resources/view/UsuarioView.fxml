@@ -9,7 +9,7 @@
 <?import javafx.scene.control.Button?>
 <VBox fx:id="root" spacing="15" alignment="CENTER" prefWidth="540" prefHeight="560"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="uniquindio.edu.co.controller.UsuarioController">
+      fx:controller="uniquindio.edu.co.viewController.UsuarioViewController">
 
     <Label text="GESTIÓN DE USUARIOS AUTORIZADOS"
            style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-padding: 15;"/>

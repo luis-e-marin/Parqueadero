@@ -2,12 +2,12 @@ package uniquindio.edu.co.viewController;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import uniquindio.edu.co.controller.OperadorController;
+import uniquindio.edu.co.controller.ParqueaderoController;
 import uniquindio.edu.co.enums.TipoUsuario;
 import uniquindio.edu.co.enums.TipoVehiculo;
 import uniquindio.edu.co.model.Cuenta;
 
-public class OperadorViewController {
+public class ParqueaderoViewController {
 
     @FXML private TextField txtPlaca;
     @FXML private ComboBox<TipoVehiculo> comboTipo;
@@ -18,10 +18,10 @@ public class OperadorViewController {
     @FXML private TextArea areaResultado;
     @FXML private Button btnVolver;
 
-    private final OperadorController operadorController = new OperadorController();
+    private final ParqueaderoController parqueaderoController = new ParqueaderoController();
 
     public void setCuentaActual(Cuenta cuenta) {
-        operadorController.setCuentaActual(cuenta);
+        parqueaderoController.setCuentaActual(cuenta);
     }
 
     @FXML
@@ -32,22 +32,17 @@ public class OperadorViewController {
 
     @FXML
     public void registrarIngreso() {
-        operadorController.registrarIngreso(txtPlaca, txtNombreConductor, txtIdConductor,
+        parqueaderoController.registrarIngreso(txtPlaca, txtNombreConductor, txtIdConductor,
                 comboTipo, comboTipoUsuario, areaResultado);
     }
 
     @FXML
     public void registrarSalida() {
-        operadorController.registrarSalida(txtPlacaSalida, areaResultado);
+        parqueaderoController.registrarSalida(txtPlacaSalida, areaResultado);
     }
 
     @FXML
-    public void volverAlMenuOperador() {
-        operadorController.volverAlMenuOperador(btnVolver);
-    }
-
-    @FXML
-    public void volverAlLogin() {
-        operadorController.volverAlLogin(btnVolver);
+    public void volverAlAdmin() {
+        parqueaderoController.volverAlAdmin(btnVolver);
     }
 }

@@ -9,7 +9,7 @@
 <?import javafx.scene.control.TextArea?>
 <VBox spacing="12" alignment="CENTER" prefWidth="600" prefHeight="650"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="uniquindio.edu.co.controller.ParqueaderoController">
+      fx:controller="uniquindio.edu.co.viewController.ParqueaderoViewController">
 
     <Label text="CONTROL DE PARQUEADERO - OPERADOR"
            style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
